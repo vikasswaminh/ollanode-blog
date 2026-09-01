@@ -8,9 +8,9 @@ export const SITE = {
   description: 'Guides, tips, and product updates from the OllaNode team.',
   url: 'https://blogs.ollanode.com',
   marketingUrl: 'https://ollanode.com',
-  marketingLabel: 'ollanode.com',
+  marketingLabel: 'Visit ollanode.com',
   author: 'OllaNode Team',
-  accent: '#0d9488',
+  accent: '#FF4500',
   tagline: 'Own your infrastructure.',
   locale: 'en',
 } as const;

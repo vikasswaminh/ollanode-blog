@@ -1,36 +1,91 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostCard from '../../components/PostCard.astro';
 import { getPublishedPosts, readingTime } from '../../utils/posts';
+import { getAllTopics } from '../../utils/tags';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
-  const tags = new Set<string>();
-  for (const p of posts) for (const t of p.data.tags) tags.add(t);
-  return [...tags].map((tag) => ({
-    params: { tag },
-    props: { posts: posts.filter((p) => p.data.tags.includes(tag)), tag },
-  }));
+  const allTopics = await getAllTopics();
+
+  return allTopics.map((topic) => {
+    // Filter posts that have this tag (case-insensitive or normalized)
+    const matchingPosts = posts.filter((p) =>
+      (p.data.tags || []).some(
+        (t) => t.toLowerCase() === topic.name.toLowerCase() || t.toLowerCase().includes(topic.name.toLowerCase())
+      )
+    );
+    const isDirectMatch = matchingPosts.length > 0;
+    const finalPosts = isDirectMatch ? matchingPosts : posts.slice(0, 3);
+
+    return {
+      params: { tag: topic.name },
+      props: { posts: finalPosts, tag: topic.name, isDirectMatch, matchCount: matchingPosts.length },
+    };
+  });
 }
 
-const { posts, tag } = Astro.props;
+const { posts, tag, isDirectMatch, matchCount } = Astro.props;
 ---
 
-<BaseLayout title={`#${tag}`} description={`Posts tagged ${tag}.`}>
-  <p class="post-eyebrow"><a href="/tags/">← All tags</a></p>
-  <h1 class="page-title">#{tag}</h1>
-  <div class="post-list">
-    {
-      posts.map((p) => (
-        <PostCard
-          url={`/blog/${p.slug}/`}
-          title={p.data.title}
-          description={p.data.description}
-          pubDate={p.data.pubDate}
-          tags={p.data.tags}
-          minutes={readingTime(p.body)}
-        />
-      ))
-    }
+<BaseLayout
+  title={`#${tag} · Topics · OllaNode Blog`}
+  description={`Browse technical articles, engineering deep dives, and tutorials tagged #${tag} on OllaNode Blog.`}
+>
+  <div class="tags-page-wrapper">
+    <!-- Single Tag Hero Header -->
+    <header class="single-tag-hero-box">
+      <a href="/tags/" class="single-tag-back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        All Topics Directory
+      </a>
+
+      <h1 class="single-tag-title">
+        <span class="hash">#</span>{tag}
+      </h1>
+
+      <p class="single-tag-subtitle">
+        {
+          isDirectMatch
+            ? `Curated collection of ${matchCount} ${matchCount === 1 ? 'deep dive' : 'deep dives'} and implementation guides related to ${tag}.`
+            : `Articles covering ${tag}, video infrastructure, and distributed systems from the OllaNode engineering team.`
+        }
+      </p>
+    </header>
+
+    <!-- Articles Grid under this Tag -->
+    <div class="tag-articles-cards-grid">
+      {
+        posts.map((p) => {
+          const category = p.data.category || p.data.tags[0] || 'Engineering';
+          const pubDateFormatted = p.data.pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+
+          return (
+            <a href={`/blog/${p.slug}/`} class="tag-article-card">
+              <div class="tag-article-card-header">
+                <span class="tag-article-cat-pill">{category}</span>
+                <span class="tag-article-date">{pubDateFormatted}</span>
+              </div>
+
+              <h2 class="tag-article-card-title">{p.data.title}</h2>
+              <p class="tag-article-card-desc">{p.data.description}</p>
+
+              <div class="tag-article-card-footer">
+                <span>{readingTime(p.body)} min read</span>
+                <span class="tag-article-read-cta">
+                  Read article <span aria-hidden="true">→</span>
+                </span>
+              </div>
+            </a>
+          );
+        })
+      }
+    </div>
   </div>
 </BaseLayout>

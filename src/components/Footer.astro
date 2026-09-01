@@ -1,17 +1,606 @@
 ---
 import { SITE } from '../config';
+
 const year = new Date().getFullYear();
+
+const platformLinks = [
+  { label: 'VOD & HLS Pipeline', href: `${SITE.marketingUrl}#features` },
+  { label: 'Edge CDN & Storage', href: `${SITE.marketingUrl}#cdn` },
+  { label: 'Platform Pricing ($0)', href: `${SITE.marketingUrl}#pricing` },
+  { label: 'Documentation', href: `${SITE.marketingUrl}/docs`, external: true },
+];
+
+const blogLinks = [
+  { label: 'Guides & Tutorials', href: '/#guides' },
+  { label: 'Engineering & Rust', href: '/#engineering' },
+  { label: 'Video & Edge CDN', href: '/#video' },
+  { label: 'All Topics & Tags', href: '/tags/' },
+];
+
+const companyLinks = [
+  { label: 'About OllaNode', href: '/about/' },
+  { label: 'Contact Engineering', href: `${SITE.marketingUrl}#contact`, external: true },
+  { label: 'OllaNode.com', href: 'https://ollanode.com', external: true },
+  { label: 'OllaSoftware.com', href: 'https://ollasoftware.com', external: true },
+];
 ---
 
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <p>© {year} {SITE.brand}. All rights reserved.</p>
-    <p class="footer-links">
-      <a href={SITE.marketingUrl}>{SITE.marketingLabel}</a>
-      <span aria-hidden="true">·</span>
-      <a href="/rss.xml">RSS</a>
-      <span aria-hidden="true">·</span>
-      <a href="/tags/">Tags</a>
-    </p>
+<footer class="light-footer" aria-label="Site Footer">
+  <div class="footer-top-divider"></div>
+
+  <div class="footer-container">
+    <!-- Main Grid: Brand + Navigation Link Columns -->
+    <div class="footer-grid">
+      
+      <!-- Brand Column -->
+      <div class="footer-brand-col">
+        <a href="/" class="footer-brand-logo">
+          <svg class="brand-svg-icon" width="26" height="26" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="#FF4500" />
+            <path d="M9 16L14 21L23 11" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="footer-brand-text">
+            Olla<span class="brand-accent-orange">Node</span>
+          </span>
+        </a>
+
+        <p class="footer-tagline">
+          Open source self-hosted video infrastructure, edge CDN, WhisperX AI transcripts, and cloud storage.
+        </p>
+
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span class="status-text">All systems operational · Apache 2.0</span>
+        </div>
+
+        <div class="footer-socials">
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Twitter / X">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Links Grid -->
+      <div class="footer-links-grid">
+        
+        <!-- Platform -->
+        <div class="footer-nav-col">
+          <h4 class="footer-col-title">Platform</h4>
+          <ul class="footer-nav-list">
+            {platformLinks.map((item) => (
+              <li>
+                <a href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="footer-nav-link">
+                  {item.label}
+                  {item.external && <span class="external-arrow">↗</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Blog -->
+        <div class="footer-nav-col">
+          <h4 class="footer-col-title">Blog</h4>
+          <ul class="footer-nav-list">
+            {blogLinks.map((item) => (
+              <li>
+                <a href={item.href} class="footer-nav-link">
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div class="footer-nav-col">
+          <h4 class="footer-col-title">Company</h4>
+          <ul class="footer-nav-list">
+            {companyLinks.map((item) => (
+              <li>
+                <a href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} class="footer-nav-link">
+                  {item.label}
+                  {item.external && <span class="external-arrow">↗</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Copyright Strip -->
+    <div class="footer-bottom-bar">
+      <div class="footer-copy-text">
+        © {year} <strong>{SITE.brand}</strong>. Own your video & edge infrastructure.
+      </div>
+
+      <div class="footer-legal-links">
+        <a href={SITE.marketingUrl} target="_blank" rel="noopener noreferrer">Visit {SITE.brand}.com ↗</a>
+        <span class="legal-dot">•</span>
+        <a href="/tags/">Tags</a>
+        <span class="legal-dot">•</span>
+        <a href="#top" class="back-to-top">Back to top ↑</a>
+      </div>
+    </div>
   </div>
 </footer>
+
+<style>
+  .light-footer {
+    width: 100%;
+    background-color: #f8fafc !important;
+    color: #1e293b !important;
+    position: relative;
+    box-sizing: border-box;
+    font-family: var(--font, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+    margin-top: 1rem;
+    border-top: 1px solid #e2e8f0 !important;
+  }
+
+  .footer-top-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #ff4500 0%, #ff8c00 50%, #e2e8f0 100%);
+    opacity: 0.65;
+  }
+
+  .footer-container {
+    max-width: 82rem;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 2rem;
+    box-sizing: border-box;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 3.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .footer-brand-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .footer-brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: #0f172a !important;
+  }
+
+  .footer-brand-logo:hover {
+    text-decoration: none;
+  }
+
+  .brand-svg-icon {
+    flex-shrink: 0;
+    border-radius: 8px;
+  }
+
+  .footer-brand-text {
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a !important;
+  }
+
+  .brand-accent-orange {
+    color: #ff4500 !important;
+  }
+
+  .footer-tagline {
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: #64748b !important;
+    margin: 0;
+    max-width: 19rem;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 9999px;
+    padding: 0.3rem 0.8rem;
+    width: fit-content;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
+
+  .status-text {
+    font-size: 0.73rem;
+    font-weight: 600;
+    color: #475569 !important;
+  }
+
+  .footer-socials {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.15rem;
+  }
+
+  .social-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #475569 !important;
+    text-decoration: none;
+    transition: all 0.18s ease;
+  }
+
+  .social-icon-btn:hover {
+    color: #ff4500 !important;
+    border-color: #ff4500 !important;
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  /* Links Columns */
+  .footer-links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.25rem;
+  }
+
+  .footer-nav-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-col-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #0f172a !important;
+    margin: 0 0 0.35rem;
+  }
+
+  .footer-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .footer-nav-link {
+    font-size: 0.85rem;
+    color: #475569 !important;
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    line-height: 1.4;
+  }
+
+  .footer-nav-link:hover {
+    color: #ff4500 !important;
+    text-decoration: none;
+    transform: translateX(2px);
+  }
+
+  .external-arrow {
+    font-size: 0.7rem;
+    opacity: 0.65;
+  }
+
+  .footer-bottom-bar {
+    padding-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-copy-text {
+    font-size: 0.82rem;
+    color: #64748b !important;
+  }
+
+  .footer-copy-text strong {
+    color: #1e293b !important;
+  }
+
+  .footer-legal-links {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-legal-links a {
+    font-size: 0.82rem;
+    color: #64748b !important;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+
+  .footer-legal-links a:hover {
+    color: #ff4500 !important;
+    text-decoration: none;
+  }
+
+  .legal-dot {
+    color: #cbd5e1 !important;
+    font-size: 0.8rem;
+  }
+
+  .back-to-top {
+    font-weight: 600 !important;
+    color: #0f172a !important;
+  }
+
+  /* ----------------------------------------------------
+     1. Tablet Responsive Layout (768px to 1024px)
+     Does not affect laptop view (> 1024px)
+     ---------------------------------------------------- */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .footer-container {
+      padding: 2.25rem 1.5rem 1.75rem;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding-bottom: 1.75rem;
+    }
+
+    .footer-brand-col {
+      max-width: 100%;
+      gap: 0.85rem;
+    }
+
+    .footer-brand-text {
+      font-size: 1.2rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.84rem;
+      line-height: 1.5;
+      max-width: 32rem;
+    }
+
+    .status-pill {
+      padding: 0.28rem 0.75rem;
+    }
+
+    .status-text {
+      font-size: 0.72rem;
+    }
+
+    .footer-links-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.75rem;
+    }
+
+    .footer-col-title {
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+
+    .footer-nav-list {
+      gap: 0.5rem;
+    }
+
+    .footer-nav-link {
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .footer-bottom-bar {
+      padding-top: 1.25rem;
+      gap: 1rem;
+    }
+
+    .footer-copy-text {
+      font-size: 0.78rem;
+    }
+
+    .footer-legal-links a,
+    .back-to-top {
+      font-size: 0.78rem;
+    }
+  }
+
+  /* ----------------------------------------------------
+     2. Mobile / Phone Responsive Layout (<= 767px)
+     Does not affect laptop view (> 1024px)
+     ---------------------------------------------------- */
+  @media (max-width: 767px) {
+    .footer-container {
+      padding: 1.75rem 1rem 1.35rem;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding-bottom: 1.35rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .footer-brand-col {
+      max-width: 100%;
+      gap: 0.75rem;
+    }
+
+    .footer-brand-logo {
+      gap: 0.55rem;
+    }
+
+    .footer-brand-text {
+      font-size: 1.12rem;
+    }
+
+    .brand-svg-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .footer-tagline {
+      font-size: 0.78rem;
+      line-height: 1.45;
+      max-width: 100%;
+      color: #64748b !important;
+    }
+
+    .status-pill {
+      padding: 0.25rem 0.65rem;
+      max-width: 100%;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+    }
+
+    .status-text {
+      font-size: 0.68rem;
+    }
+
+    .footer-socials {
+      margin-top: 0.1rem;
+    }
+
+    .social-icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+    }
+
+    /* Balanced 2-Column Mobile Links Grid: Platform & Blog top, Company bottom */
+    .footer-links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.35rem 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .footer-nav-col:nth-child(3) {
+      grid-column: span 2;
+    }
+
+    .footer-nav-col:nth-child(3) .footer-nav-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.45rem 1rem;
+    }
+
+    .footer-col-title {
+      font-size: 0.72rem;
+      font-weight: 750;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+
+    .footer-nav-list {
+      gap: 0.45rem;
+    }
+
+    .footer-nav-link {
+      font-size: 0.78rem;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .footer-bottom-bar {
+      padding-top: 1.15rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    .footer-copy-text {
+      font-size: 0.74rem;
+      line-height: 1.4;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+      width: 100%;
+    }
+
+    .footer-legal-links a {
+      font-size: 0.74rem;
+      padding: 0.15rem 0;
+    }
+
+    .legal-dot {
+      font-size: 0.65rem;
+    }
+
+    .back-to-top {
+      font-size: 0.74rem;
+      font-weight: 700 !important;
+      color: #ff4500 !important;
+    }
+  }
+
+  /* ----------------------------------------------------
+     3. Small Mobile View (<= 480px)
+     ---------------------------------------------------- */
+  @media (max-width: 480px) {
+    .footer-container {
+      padding: 1.5rem 0.75rem 1.25rem;
+    }
+
+    .footer-brand-text {
+      font-size: 1.05rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .status-text {
+      font-size: 0.66rem;
+    }
+
+    .footer-links-grid {
+      gap: 1.2rem 0.75rem;
+    }
+
+    .footer-nav-link {
+      font-size: 0.75rem;
+    }
+  }
+</style>

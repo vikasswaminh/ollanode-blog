@@ -1,0 +1,620 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { readingTime } from '../utils/posts';
+import featuredImage from 'C:/Users/astha/.gemini/antigravity-ide/brain/53fbbd45-c82d-41d1-b24c-7844e0163add/featured_blog_developer_1788171537266.jpg';
+
+interface Props {
+  posts?: CollectionEntry<'blog'>[];
+}
+
+const { posts = [] } = Astro.props;
+
+// Use real post for featured if available
+const realFeatured = posts.length > 0 ? posts[0] : null;
+
+const featuredData = realFeatured ? {
+  title: realFeatured.data.title,
+  desc: realFeatured.data.description,
+  href: `/blog/${realFeatured.slug}/`,
+  tag: realFeatured.data.tags[0] || 'Engineering',
+  readTime: `${readingTime(realFeatured.body)} min read`,
+  img: realFeatured.data.cover || featuredImage.src
+} : {
+  title: "Getting started with OllaNode — Own Your Video & AI Infrastructure",
+  desc: "Learn how OllaNode delivers self-hosted video transcoding, OpenResty edge CDN, WhisperX AI transcripts, and scalable media pipelines.",
+  href: "/blog/getting-started/",
+  tag: "Guides",
+  readTime: "5 min read",
+  img: featuredImage.src
+};
+
+// Sub-cards: use posts 1..3 if available, or OllaNode-specific topic cards
+const subCards = posts.length > 1 ? posts.slice(1, 4).map((p) => ({
+  tag: p.data.tags[0] || 'Infrastructure',
+  title: p.data.title,
+  desc: p.data.description,
+  href: `/blog/${p.slug}/`
+})) : [
+  {
+    tag: "Video & CDN",
+    title: "Adaptive HLS Transcoding & Edge Delivery",
+    desc: "Complete guide to setting up automated 360p to 4K HLS ladders with OpenResty pull zone caching.",
+    href: "/categories/"
+  },
+  {
+    tag: "AI & Agents",
+    title: "WhisperX Voice Transcripts & MCP Integration",
+    desc: "How to extract high-accuracy subtitles and connect AI agent capabilities using OpenAPI 3.1 specs.",
+    href: "/categories/"
+  },
+  {
+    tag: "Security",
+    title: "AES-128 Encryption & Signed Playback URLs",
+    desc: "Securing self-hosted video streams with S3 presigned URLs and token authentication at the edge.",
+    href: "/categories/"
+  }
+];
+
+const founderSpecialPosts = [
+  { title: "Getting Started with OllaNode Self-Hosted Video", href: "/blog/getting-started/" },
+  { title: "Welcome to the OllaNode Engineering Hub", href: "/blog/welcome-to-the-blog/" },
+  { title: "Configuring OpenResty CDN Cache Rules", href: "/categories/" },
+  { title: "WhisperX Speech-to-Text Setup Guide", href: "/categories/" },
+  { title: "Adaptive HLS Transcoding 360p to 4K", href: "/categories/" },
+  { title: "AES-128 Key Encryption & Signed Playback", href: "/categories/" },
+  { title: "Purging OpenResty CDN Pull Zones", href: "/categories/" },
+  { title: "V8 Isolate Edge Functions Execution", href: "/categories/" }
+];
+
+const aiSpecialPosts = [
+  { title: "OpenAPI 3.1 & MCP Agent Specs Guide", href: "/categories/" },
+  { title: "Human Approval Gates for Destructive Actions", href: "/categories/" },
+  { title: "Tamper-Evident Hash-Chain Audit Logs", href: "/categories/" },
+  { title: "Self-Hosted VOD & HLS Ladder Pipeline", href: "/categories/" },
+  { title: "S3 Presigned URL Security Deep Dive", href: "/categories/" },
+  { title: "Benchmarking Edge CDN Latency Worldwide", href: "/categories/" },
+  { title: "Integrating WhisperX Voice Transcripts", href: "/categories/" },
+  { title: "Zero-Downtime Deployment with OpenResty", href: "/categories/" },
+  { title: "Scaling Infrastructure for Video Streaming", href: "/categories/" }
+];
+---
+
+<section class="redesign-blog-section">
+  <!-- Top Section Title Header -->
+  <div class="header-center-wrap">
+    <h2 class="main-section-title">OllaNode Infrastructure & Engineering Blog</h2>
+    <p class="main-section-subtitle">Deep dives, how-to guides, engineering stories & updates on video delivery, edge compute & AI infrastructure</p>
+  </div>
+
+  <!-- 3 Column Main Layout Grid -->
+  <div class="redesign-grid-container">
+    
+    <!-- LEFT COLUMN: Founder Special -->
+    <aside class="col-left">
+      <div class="badge-pill founder-badge">FOUNDER SPECIAL</div>
+      <ul class="article-links-list">
+        {founderSpecialPosts.map((post) => (
+          <li>
+            <a href={post.href} class="link-item">{post.title}</a>
+          </li>
+        ))}
+      </ul>
+      <a href="/categories/" class="view-all-btn">View All →</a>
+    </aside>
+
+    <!-- MIDDLE COLUMN: Newest Articles & Main Showcase -->
+    <main class="col-center">
+      <!-- Sub-header bar -->
+      <div class="newest-header-bar">
+        <span class="badge-pill newest-badge">
+          <svg class="flame-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 23c-4.97 0-9-3.58-9-8 0-4.19 3.01-7.26 5.88-10.12.55-.55 1.12-1.09 1.67-1.65.34-.35.88-.23 1.05.21.68 1.76 1.95 3.39 3.2 4.41 1.72 1.41 3.2 2.65 3.2 5.15 0 .68-.09 1.34-.26 1.97-.1.35.21.68.56.59 1.54-.38 2.7-1.46 3.23-2.86.09-.23.4-.29.56-.1 1.25 1.52 1.91 3.27 1.91 5.4 0 4.42-4.03 8-9 8zm-1.87-4.47c1.78.68 3.51.15 4.31-.61.47-.45.74-1.07.78-1.72.03-.59-.19-1.2-.56-1.74-.53-.78-1.42-1.57-2.34-2.39-.77.85-1.54 1.83-1.89 2.92-.37 1.14-.23 2.5.7 3.54z"/>
+          </svg>
+          NEWEST ARTICLES
+        </span>
+        <span class="newest-subtitle-text">Latest from our experts</span>
+      </div>
+
+      <!-- Featured Main Hero Card -->
+      <div class="featured-main-card">
+        <div class="featured-image-wrapper">
+          <img src={featuredData.img} alt={featuredData.title} class="featured-img" />
+        </div>
+
+        <div class="featured-content-wrapper">
+          <div class="featured-top-tag">
+            <span class="pill-tag-new">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 23c-4.97 0-9-3.58-9-8 0-4.19 3.01-7.26 5.88-10.12.55-.55 1.12-1.09 1.67-1.65.34-.35.88-.23 1.05.21.68 1.76 1.95 3.39 3.2 4.41 1.72 1.41 3.2 2.65 3.2 5.15 0 .68-.09 1.34-.26 1.97-.1.35.21.68.56.59 1.54-.38 2.7-1.46 3.23-2.86.09-.23.4-.29.56-.1 1.25 1.52 1.91 3.27 1.91 5.4 0 4.42-4.03 8-9 8z"/>
+              </svg>
+              NEW
+            </span>
+          </div>
+
+          <div class="featured-category-badge">{featuredData.tag}</div>
+
+          <h3 class="featured-title">
+            <a href={featuredData.href}>{featuredData.title}</a>
+          </h3>
+
+          <p class="featured-desc">
+            {featuredData.desc}
+          </p>
+
+          <div class="featured-footer-meta">
+            <span class="read-time">{featuredData.readTime}</span>
+            <span class="meta-dot">•</span>
+            <a href={featuredData.href} class="read-article-link">Read article →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Sub-Cards Row Grid -->
+      <div class="subcards-grid">
+        {subCards.map((card) => (
+          <div class="subcard-item">
+            <span class="subcard-tag">{card.tag}</span>
+            <h4 class="subcard-title">
+              <a href={card.href}>{card.title}</a>
+            </h4>
+            <p class="subcard-desc">{card.desc}</p>
+          </div>
+        ))}
+      </div>
+    </main>
+
+    <!-- RIGHT COLUMN: AI Special -->
+    <aside class="col-right">
+      <div class="badge-pill ai-special-badge">AI SPECIAL</div>
+      <ul class="article-links-list">
+        {aiSpecialPosts.map((post) => (
+          <li>
+            <a href={post.href} class="link-item">{post.title}</a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+
+  </div>
+
+
+</section>
+
+<style>
+  .redesign-blog-section {
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1e293b;
+    position: relative;
+  }
+
+  /* Header Centered */
+  .header-center-wrap {
+    text-align: center;
+    margin-bottom: 2.25rem;
+  }
+
+  .main-section-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.4rem;
+    line-height: 1.25;
+  }
+
+  .main-section-subtitle {
+    font-size: 0.98rem;
+    color: #64748b;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  /* 3 Column Grid Container */
+  .redesign-grid-container {
+    display: grid;
+    grid-template-columns: 270px 1fr 270px;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (max-width: 1180px) {
+    .redesign-grid-container {
+      grid-template-columns: 240px 1fr 240px;
+      gap: 1.25rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .redesign-grid-container {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  /* Shared Pill Badges */
+  .badge-pill {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    width: max-content;
+    white-space: nowrap;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 0.4rem 0.95rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  }
+
+  .founder-badge {
+    background: #ff6600;
+    color: #ffffff;
+  }
+
+  .ai-special-badge {
+    background: #7c3aed;
+    color: #ffffff;
+  }
+
+  .newest-badge {
+    background: #ff6600;
+    color: #ffffff;
+    margin-bottom: 0;
+  }
+
+  .flame-icon {
+    display: inline-block;
+  }
+
+  /* Side Columns List */
+  .article-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .article-links-list li {
+    line-height: 1.35;
+  }
+
+  .link-item {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #334155;
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.15s ease;
+    display: block;
+  }
+
+  .link-item:hover {
+    color: #ff6600;
+    text-decoration: none;
+    transform: translateX(2px);
+  }
+
+  .view-all-btn {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #ff6600;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .view-all-btn:hover {
+    text-decoration: underline;
+    transform: translateX(3px);
+  }
+
+  /* Center Main Column */
+  .newest-header-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .newest-subtitle-text {
+    font-size: 0.92rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  /* Featured Card */
+  .featured-main-card {
+    display: flex;
+    background: #fffcf7;
+    border: 1.5px solid #fed7aa;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 20px -4px rgba(255, 102, 0, 0.06);
+    position: relative;
+  }
+
+  .featured-main-card:hover {
+    border-color: #ff6600;
+    box-shadow: 0 8px 30px -4px rgba(255, 102, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .featured-main-card {
+      flex-direction: column;
+    }
+  }
+
+  .featured-image-wrapper {
+    flex: 0 0 44%;
+    position: relative;
+    overflow: hidden;
+    background: #0f172a;
+    min-height: 250px;
+  }
+
+  .featured-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .featured-main-card:hover .featured-img {
+    transform: scale(1.03);
+  }
+
+  .featured-content-wrapper {
+    flex: 1;
+    padding: 1.75rem 1.85rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .featured-top-tag {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .pill-tag-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: #ff6600;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .featured-category-badge {
+    display: inline-block;
+    align-self: flex-start;
+    background: #e65100;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    margin-bottom: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .featured-title {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.3;
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.015em;
+  }
+
+  .featured-title a {
+    color: #0f172a;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .featured-title a:hover {
+    color: #ff6600;
+  }
+
+  .featured-desc {
+    font-size: 0.88rem;
+    color: #64748b;
+    line-height: 1.55;
+    margin: 0 0 1.25rem;
+  }
+
+  .featured-footer-meta {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.84rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .meta-dot {
+    color: #cbd5e1;
+  }
+
+  .read-article-link {
+    color: #ff6600;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .read-article-link:hover {
+    text-decoration: underline;
+    transform: translateX(2px);
+  }
+
+  /* Subcards Grid */
+  .subcards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .subcards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .subcard-item {
+    background: #fffcf7;
+    border: 1.5px solid #fed7aa;
+    border-radius: 14px;
+    padding: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+  }
+
+  .subcard-item:hover {
+    border-color: #ff6600;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px -2px rgba(255, 102, 0, 0.1);
+  }
+
+  .subcard-tag {
+    display: inline-block;
+    align-self: flex-start;
+    background: #e65100;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    margin-bottom: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .subcard-title {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.35;
+    margin: 0 0 0.5rem;
+  }
+
+  .subcard-title a {
+    color: #0f172a;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .subcard-title a:hover {
+    color: #ff6600;
+  }
+
+  .subcard-desc {
+    font-size: 0.82rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Floating Counselling Button */
+  .floating-counselling-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 999;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: #ffffff;
+    font-size: 0.86rem;
+    font-weight: 700;
+    padding: 0.65rem 1.2rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4), 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .floating-counselling-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 30px rgba(220, 38, 38, 0.5);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .sparkle-icon {
+    font-size: 0.95rem;
+    color: #fef08a;
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .redesign-blog-section {
+      color: #e2e8f0;
+    }
+    .main-section-title {
+      color: #f8fafc;
+    }
+    .main-section-subtitle {
+      color: #94a3b8;
+    }
+    .link-item {
+      color: #cbd5e1;
+    }
+    .link-item:hover {
+      color: #ff6600;
+    }
+    .newest-subtitle-text {
+      color: #94a3b8;
+    }
+    .featured-main-card {
+      background: #181510;
+      border-color: #7c2d12;
+    }
+    .featured-title {
+      color: #f8fafc;
+    }
+    .featured-title a {
+      color: #f8fafc;
+    }
+    .featured-desc {
+      color: #94a3b8;
+    }
+    .subcard-item {
+      background: #181510;
+      border-color: #7c2d12;
+    }
+    .subcard-title {
+      color: #f8fafc;
+    }
+    .subcard-title a {
+      color: #f8fafc;
+    }
+    .subcard-desc {
+      color: #94a3b8;
+    }
+  }
+</style>

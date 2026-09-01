@@ -1,23 +1,707 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getPublishedPosts } from '../../utils/posts';
+import { getCategorizedTopics } from '../../utils/tags';
 
-const posts = await getPublishedPosts();
-const counts = new Map<string, number>();
-for (const p of posts) for (const t of p.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
-const tags = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+const { categories, allTopics } = await getCategorizedTopics();
 ---
 
-<BaseLayout title="Tags" description="Browse posts by topic.">
-  <h1 class="page-title">Tags</h1>
-  {tags.length === 0 && <p class="empty">No tags yet.</p>}
-  <div class="tag-cloud">
-    {
-      tags.map(([t, n]) => (
-        <a class="tag tag-lg" href={`/tags/${t}/`}>
-          #{t} <span class="tag-count">{n}</span>
-        </a>
-      ))
-    }
-  </div>
+<BaseLayout
+  title="Tags & Categories · OllaNode Blog"
+  description="Browse all engineering topics, architectures, and technical tags across the OllaNode publication."
+>
+  <main class="tags-hub-page">
+    <!-- Light subtle developer grid effect -->
+    <div class="hero-grid-pattern" aria-hidden="true"></div>
+
+    <div class="container-wide tags-hub-container">
+      <!-- Unified Header Area: Title, Description, and Categories (No dividing line, closer spacing) -->
+      <div class="hero-content">
+        <div class="eyebrow-badge mono">TOPIC TAXONOMY</div>
+        <h1 class="hero-title">
+          Explore Topics & <span class="hero-title-accent">Tags</span>
+        </h1>
+        <p class="hero-tagline">
+          Browse technical topics and architectures across the OllaNode engineering publication.
+        </p>
+
+        <!-- Category Filter Pills placed directly nearer to the description with NO dividing line -->
+        <nav class="category-filter-strip" aria-label="Category filters">
+          <button type="button" class="cat-filter-pill active" data-cat-id="all">
+            All Topics <span class="pill-count mono">{allTopics.length}</span>
+          </button>
+          {
+            categories.map((cat) => (
+              <button type="button" class="cat-filter-pill" data-cat-id={cat.id}>
+                {cat.name} <span class="pill-count mono">{cat.tags.length}</span>
+              </button>
+            ))
+          }
+        </nav>
+      </div>
+
+      <!-- 3-Column Small Cards Grid directly below -->
+      <div class="small-tag-cards-grid" id="tag-cards-grid">
+        {
+          categories.map((cat) => (
+            <article
+              class="small-tag-card"
+              data-cat-card={cat.id}
+              tabindex="0"
+              role="region"
+              aria-label={`${cat.name} tags`}
+            >
+              <!-- Card Header -->
+              <div class="card-header">
+                <div class="card-title-row">
+                  <h2 class="card-title">
+                    <span class="card-title-pip"></span>
+                    {cat.name}
+                  </h2>
+                  <span class="card-count-badge mono">{cat.tags.length} tags</span>
+                </div>
+                <p class="card-desc">{cat.tagline}</p>
+              </div>
+
+              <!-- Tags Tray: Clicking or hovering displays the tags -->
+              <div class="card-tags-tray">
+                <div class="tags-tray-hint">
+                  <span class="hint-label">Hover or tap to reveal all tags</span>
+                  <span class="hint-arrow" aria-hidden="true">↓</span>
+                </div>
+                <div class="tags-pill-list">
+                  {
+                    cat.tags.map((t) => (
+                      <a
+                        href={`/tags/${t.slug}/`}
+                        class="tag-chip"
+                        title={`Explore #${t.name}`}
+                        onclick="event.stopPropagation();"
+                      >
+                        <span class="tag-hash">#</span>
+                        <span class="tag-name">{t.name}</span>
+                        <span class="tag-count mono">{t.articleCount}</span>
+                      </a>
+                    ))
+                  }
+                </div>
+              </div>
+
+              <!-- Card Footer -->
+              <div class="card-footer">
+                <span class="card-meta mono">{cat.tags.length} topics indexed</span>
+                <span class="card-expand-indicator mono">View tags →</span>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+
+  <!-- Interactive Client Script: Filter pills & click/hover tag reveal -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const filterPills = document.querySelectorAll<HTMLButtonElement>('.cat-filter-pill');
+      const tagCards = document.querySelectorAll<HTMLElement>('.small-tag-card');
+      let currentActiveCategory = 'all';
+
+      function performFilter() {
+        tagCards.forEach((card) => {
+          const cardCatId = card.getAttribute('data-cat-card') || '';
+          const isMatch = (currentActiveCategory === 'all' || currentActiveCategory === cardCatId);
+          card.style.display = isMatch ? 'flex' : 'none';
+        });
+      }
+
+      // Filter pill button clicks
+      filterPills.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          filterPills.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentActiveCategory = btn.getAttribute('data-cat-id') || 'all';
+          performFilter();
+        });
+      });
+
+      // Click on card toggles tags display (for mobile / click interaction)
+      tagCards.forEach((card) => {
+        card.addEventListener('click', (e) => {
+          // If user clicked directly on a tag link, allow default navigation
+          if ((e.target as HTMLElement).closest('.tag-chip')) return;
+          card.classList.toggle('is-expanded');
+        });
+
+        // Accessibility keyboard toggle
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            if ((e.target as HTMLElement).closest('.tag-chip')) return;
+            e.preventDefault();
+            card.classList.toggle('is-expanded');
+          }
+        });
+      });
+    });
+  </script>
 </BaseLayout>
+
+<style>
+  /* ----------------------------------------------------
+     1. Unified Page Wrapper (Single Section, No Line Division)
+     ---------------------------------------------------- */
+  .tags-hub-page {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    background: var(--bg, #f8fafc);
+    padding: 2.75rem 0 5rem;
+    min-height: 80vh;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tags-hub-page {
+      background: #0d111a;
+    }
+  }
+
+  /* Very light subtle developer grid pattern across the top */
+  .hero-grid-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 380px;
+    background-image:
+      linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: center top;
+    mask-image: radial-gradient(ellipse 75% 75% at 50% 30%, #000 25%, transparent 95%);
+    -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 30%, #000 25%, transparent 95%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .hero-grid-pattern {
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    }
+  }
+
+  /* Container matching home page and blog page */
+  .container-wide {
+    width: 100%;
+    max-width: 86rem;
+    margin: 0 auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ----------------------------------------------------
+     2. Unified Header Content (Closer Spacing to Categories, No Border)
+     ---------------------------------------------------- */
+  .hero-content {
+    max-width: 58rem;
+    margin: 0 auto 2.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .eyebrow-badge {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ff6600;
+    background: rgba(255, 102, 0, 0.08);
+    border: 1.5px solid rgba(255, 102, 0, 0.3);
+    padding: 0.25rem 0.8rem;
+    border-radius: 9999px;
+    margin-bottom: 0.7rem;
+    display: inline-block;
+  }
+
+  .hero-title {
+    font-size: 2.15rem;
+    font-weight: 850;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: var(--text, #0f172a);
+    margin: 0 0 0.5rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .hero-title {
+      color: #f8fafc;
+    }
+  }
+
+  .hero-title-accent {
+    color: #ff6600;
+  }
+
+  .hero-tagline {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--muted, #64748b);
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  /* ----------------------------------------------------
+     3. Category Filter Pills Bar (Placed Nearer to Description, No Dividing Line)
+     ---------------------------------------------------- */
+  .category-filter-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1.25rem; /* Placed nearer to the description line */
+    margin-bottom: 0;
+    width: 100%;
+  }
+
+  .cat-filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ffffff;
+    border: 1px solid #d4e5f5; /* Same soft blue border as home page */
+    border-radius: 9999px;
+    padding: 0.38rem 0.95rem;
+    font-size: 0.815rem;
+    font-weight: 600;
+    color: #1e293b;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    font-family: inherit;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05); /* Soft deep shadow */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .cat-filter-pill {
+      background: #111622;
+      border-color: rgba(56, 189, 248, 0.25);
+      color: #cbd5e1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  .cat-filter-pill:hover {
+    color: #0284c7; /* Same blue as home page */
+    border-color: #38bdf8;
+    background: #e0f2fe;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.16);
+    transform: translateY(-1px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .cat-filter-pill:hover {
+      background: rgba(2, 132, 199, 0.16);
+      border-color: #0284c7;
+      color: #38bdf8;
+    }
+  }
+
+  .cat-filter-pill.active {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #ff5722 0%, #ff4500 100%);
+    border: 1px solid #ff5500;
+    box-shadow: 0 3px 12px rgba(255, 69, 0, 0.35);
+    font-weight: 700;
+  }
+
+  .pill-count {
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 1px 6px;
+    border-radius: 9999px;
+    background: #f1f5f9;
+    color: #0284c7; /* Category blue accent */
+    transition: all 0.15s ease;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .pill-count {
+      background: rgba(2, 132, 199, 0.2);
+      color: #38bdf8;
+    }
+  }
+
+  .cat-filter-pill.active .pill-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+
+  /* ----------------------------------------------------
+     4. Small Tag Cards Grid (Compact Dimensions)
+     ---------------------------------------------------- */
+  .small-tag-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem; /* Compact gap */
+    width: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-title {
+      font-size: 1.65rem;
+    }
+    .hero-tagline {
+      font-size: 0.84rem;
+    }
+    .filter-pill {
+      font-size: 0.74rem;
+      padding: 0.35rem 0.75rem;
+    }
+    .small-tag-cards-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+    .card-title-text {
+      font-size: 0.88rem;
+    }
+    .card-desc {
+      font-size: 0.7rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tags-hub-page {
+      padding: 1.75rem 0 3.5rem;
+    }
+    .hero-title {
+      font-size: 1.35rem;
+    }
+    .hero-tagline {
+      font-size: 0.78rem;
+    }
+    .filter-pill {
+      font-size: 0.7rem;
+      padding: 0.3rem 0.65rem;
+    }
+    .small-tag-cards-grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .card-title-text {
+      font-size: 0.82rem;
+    }
+    .card-desc {
+      font-size: 0.65rem;
+    }
+  }
+
+  /* Compact Small Card: Reduced Size & Padding, Deep Shadow */
+  .small-tag-card {
+    background: #fffdfa;
+    background-image: linear-gradient(175deg, rgba(255, 102, 0, 0.055) 0%, rgba(255, 102, 0, 0.015) 45%, #ffffff 100%);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-top: 3px solid #ff6600;
+    border-radius: 11px;
+    padding: 0.95rem 1.1rem; /* Reduced padding for smaller card size */
+    box-shadow:
+      0 3px 5px -1px rgba(15, 23, 42, 0.04),
+      0 8px 18px -3px rgba(15, 23, 42, 0.08),
+      0 14px 22px -8px rgba(15, 23, 42, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+    outline: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .small-tag-card {
+      background: #111622;
+      background-image: linear-gradient(175deg, rgba(255, 102, 0, 0.1) 0%, rgba(255, 102, 0, 0.02) 55%, #111622 100%);
+      border-color: rgba(255, 255, 255, 0.08);
+      border-top-color: #ff6600;
+      box-shadow:
+        0 3px 6px -1px rgba(0, 0, 0, 0.3),
+        0 10px 22px -3px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  .small-tag-card:hover,
+  .small-tag-card:focus-visible,
+  .small-tag-card.is-expanded {
+    transform: translateY(-2px);
+    border-color: rgba(15, 23, 42, 0.16);
+    box-shadow:
+      0 6px 10px -2px rgba(15, 23, 42, 0.07),
+      0 14px 28px -4px rgba(15, 23, 42, 0.13),
+      0 24px 34px -10px rgba(15, 23, 42, 0.07);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .small-tag-card:hover,
+    .small-tag-card:focus-visible,
+    .small-tag-card.is-expanded {
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow:
+        0 6px 12px -2px rgba(0, 0, 0, 0.4),
+        0 18px 36px -4px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  /* Compact Card Header */
+  .card-header {
+    margin: -0.95rem -1.1rem 0.65rem;
+    padding: 0.75rem 1.1rem 0.6rem;
+    background: rgba(15, 23, 42, 0.02);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .card-header {
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  .card-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 0.25rem;
+  }
+
+  .card-title {
+    font-size: 0.96rem; /* Compact title font */
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    color: var(--text, #0f172a);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .card-title {
+      color: #f8fafc;
+    }
+  }
+
+  .card-title-pip {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #0284c7;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .card-title-pip {
+      background: #38bdf8;
+    }
+  }
+
+  /* Category Tag Count Badge */
+  .card-count-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 1.5px 6px;
+    border-radius: 9999px;
+    color: #0284c7;
+    background: #e0f2fe;
+    border: 1px solid #bae6fd;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .card-count-badge {
+      color: #38bdf8;
+      background: rgba(2, 132, 199, 0.15);
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+  }
+
+  .card-desc {
+    font-size: 0.76rem; /* Compact description */
+    color: var(--muted, #64748b);
+    line-height: 1.38;
+    margin: 0;
+  }
+
+  /* ----------------------------------------------------
+     Tags Tray: Compact Height & Padding
+     ---------------------------------------------------- */
+  .card-tags-tray {
+    position: relative;
+    margin-top: 0.35rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tags-tray-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--muted, #94a3b8);
+    margin-bottom: 0.35rem;
+    transition: opacity 0.2s ease;
+  }
+
+  .hint-arrow {
+    font-size: 0.75rem;
+    color: #ff6600;
+    transition: transform 0.2s ease;
+  }
+
+  .small-tag-card:hover .hint-arrow,
+  .small-tag-card.is-expanded .hint-arrow {
+    transform: rotate(180deg);
+  }
+
+  /* Tags Pill List */
+  .tags-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    max-height: 64px; /* Shows initial rows compactly */
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Hovering or clicking expands and displays all tags */
+  .small-tag-card:hover .tags-pill-list,
+  .small-tag-card:focus-within .tags-pill-list,
+  .small-tag-card.is-expanded .tags-pill-list {
+    max-height: 380px;
+  }
+
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #ffffff;
+    border: 1px solid #d4e5f5;
+    border-radius: 9999px;
+    padding: 0.22rem 0.6rem; /* Compact chip padding */
+    font-size: 0.73rem; /* Compact font size */
+    font-weight: 600;
+    color: var(--text, #1e293b);
+    text-decoration: none;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tag-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(56, 189, 248, 0.2);
+      color: #e2e8f0;
+    }
+  }
+
+  .tag-chip:hover {
+    border-color: #ff6600;
+    color: #ff6600;
+    background: #fff7ed;
+    transform: translateY(-1px);
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(255, 102, 0, 0.14);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tag-chip:hover {
+      background: rgba(255, 102, 0, 0.12);
+      color: #ff8533;
+    }
+  }
+
+  /* Hashtag sign */
+  .tag-hash {
+    color: #7c3aed;
+    font-weight: 900;
+    font-size: 0.78rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tag-hash {
+      color: #a78bfa;
+    }
+  }
+
+  .tag-name {
+    white-space: nowrap;
+  }
+
+  .tag-count {
+    font-size: 0.62rem;
+    font-weight: 800;
+    background: #f1f5f9;
+    color: #334155;
+    padding: 0.5px 4px;
+    border-radius: 9999px;
+    transition: all 0.15s ease;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tag-count {
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+  }
+
+  .tag-chip:hover .tag-count {
+    background: #ff6600;
+    color: #ffffff;
+  }
+
+  /* Compact Card Footer */
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.55rem;
+    margin-top: 0.4rem;
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
+    font-size: 0.68rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .card-footer {
+      border-top-color: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  .card-meta {
+    color: var(--muted, #94a3b8);
+    font-weight: 600;
+  }
+
+  .card-expand-indicator {
+    color: #ff6600;
+    font-weight: 700;
+    transition: transform 0.15s ease;
+  }
+
+  .small-tag-card:hover .card-expand-indicator,
+  .small-tag-card.is-expanded .card-expand-indicator {
+    transform: translateX(2px);
+  }
+</style>

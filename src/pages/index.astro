@@ -3,45 +3,453 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { SITE } from '../config';
 import { getPublishedPosts, readingTime } from '../utils/posts';
+import featuredImage from 'C:/Users/astha/.gemini/antigravity-ide/brain/53fbbd45-c82d-41d1-b24c-7844e0163add/featured_blog_developer_1788171537266.jpg';
 
 const posts = await getPublishedPosts();
+const recentFour = posts.slice(0, 4);
 const featured = posts[0];
 const rest = posts.slice(1);
+
+const categories = [
+  { label: 'All', tag: 'all', href: '#all' },
+  { label: 'Product & Changelog', tag: 'product', href: '#product' },
+  { label: 'Guides', tag: 'guides', href: '#guides' },
+  { label: 'Comparisons', tag: 'comparisons', href: '#comparisons' },
+  { label: 'Video and CDN', tag: 'video', href: '#video' },
+  { label: 'AI & agents', tag: 'ai', href: '#ai' },
+  { label: 'Engineering', tag: 'engineering', href: '#engineering' },
+  { label: 'Security, Edge and Performance', tag: 'security', href: '#security' },
+];
+
+const quickJumpLinks = [
+  { label: 'Featured', href: '#featured' },
+  { label: 'Guides', href: '#guides' },
+  { label: 'Comparisons', href: '#comparisons' },
+  { label: 'Video & CDN', href: '#video' },
+  { label: 'Pricing', href: '#pricing-tab' },
+  { label: 'Archive', href: '#archive' },
+];
+
+function getPostCategoryKey(post: any) {
+  const cat = (post.data.category || post.data.tags?.[0] || '').toLowerCase();
+  if (cat.includes('product') || cat.includes('changelog')) return 'product';
+  if (cat.includes('guide') || cat.includes('tutorial')) return 'guides';
+  if (cat.includes('comparison')) return 'comparisons';
+  if (cat.includes('video') || cat.includes('cdn')) return 'video';
+  if (cat.includes('ai') || cat.includes('agent')) return 'ai';
+  if (cat.includes('engineer') || cat.includes('architecture')) return 'engineering';
+  if (cat.includes('security') || cat.includes('performance') || cat.includes('edge')) return 'security';
+  return cat;
+}
+
+function formatSidebarTitle(title: string) {
+  const shortMap: Record<string, string> = {
+    'Building a Production-Grade HLS Transcoding Pipeline with Rust and NATS Jetstream': 'Production HLS Transcoding in Rust',
+    'Why We Built an Open Source Mux Alternative in Rust': 'Open Source Mux Alternative in Rust',
+    'Step-by-Step: Setting Up Your First Open Source Video Pipeline with OllaNode': 'Setting Up Open Video Pipeline',
+    'MCP in Action: Controlling Video Infrastructure with AI Agents': 'Controlling Video Infra with AI Agents',
+    'Step-by-Step: How to Generate Dynamic HLS Resolution Ladders': 'Dynamic HLS Resolution Ladders',
+    'Introducing OllaNode: The Open Source Infrastructure for Video Delivery & Edge Compute': 'Introducing OllaNode Video Infra',
+  };
+  if (shortMap[title]) return shortMap[title];
+
+  if (title.includes(':')) {
+    const afterColon = title.split(':')[1]?.trim();
+    if (afterColon && afterColon.length <= 38) return afterColon;
+  }
+
+  if (title.length > 38) {
+    const truncated = title.slice(0, 36);
+    const lastSpace = truncated.lastIndexOf(' ');
+    return (lastSpace > 24 ? truncated.slice(0, lastSpace) : truncated).trim() + '…';
+  }
+  return title;
+}
+
+function formatMobileSubcardTitle(title: string) {
+  const shortMap: Record<string, string> = {
+    'Building a Production-Grade HLS Transcoding Pipeline with Rust and NATS Jetstream': 'Production HLS in Rust',
+    'Why We Built an Open-Source Mux Alternative in Rust: The True Cost of Per-Minute Billing': 'Open Source Mux Alternative',
+    'Why We Built an Open Source Mux Alternative in Rust': 'Open Source Mux Alternative',
+    'Step-by-Step: Setting Up Your First Open-Source Video Pipeline with Ollanode': 'Setup Video Pipeline',
+    'Step-by-Step: Setting Up Your First Open Source Video Pipeline with OllaNode': 'Setup Video Pipeline',
+    'Model Context Protocol (MCP) in Action: Controlling Video Infrastructure with AI Agents': 'AI Video Agents (MCP)',
+    'MCP in Action: Controlling Video Infrastructure with AI Agents': 'AI Video Agents (MCP)',
+    'Step-by-Step: How to Generate Dynamic HLS Resolution Ladders (360p to 4K)': 'Dynamic HLS Ladders',
+    'Step-by-Step: How to Generate Dynamic HLS Resolution Ladders': 'Dynamic HLS Ladders',
+    'Introducing OllaNode: Self-Hosted Video Infrastructure for Developers': 'Introducing OllaNode',
+    'Introducing OllaNode: The Open Source Infrastructure for Video Delivery & Edge Compute': 'Introducing OllaNode',
+  };
+  if (shortMap[title]) return shortMap[title];
+
+  if (title.includes(':')) {
+    const afterColon = title.split(':')[1]?.trim();
+    if (afterColon && afterColon.length <= 32) return afterColon;
+  }
+
+  if (title.length > 32) {
+    const truncated = title.slice(0, 30);
+    const lastSpace = truncated.lastIndexOf(' ');
+    return (lastSpace > 18 ? truncated.slice(0, lastSpace) : truncated).trim() + '…';
+  }
+  return title;
+}
+
+function formatMobileSubcardDesc(desc: string) {
+  const shortDescMap: Record<string, string> = {
+    'An implementation-focused guide to using the Model Context Protocol (MCP) to let AI agents inspect, reason about, and control video infrastructure with Ollanode.': 'Control video infra with MCP & AI agents.',
+    'A complete, step-by-step guide to building a source-aware, dynamic HLS resolution ladder with Ollanode — from bitrate theory to a working 360p-to-4K adaptive stream.': 'Build 360p to 4K dynamic HLS ladders.',
+    'A complete, step-by-step guide to installing, configuring, securing, and scaling your first self-hosted video pipeline with Ollanode — from upload to adaptive HLS delivery.': 'Deploy self-hosted VOD & HLS streaming.',
+    'Compare Mux and self-hosted video infrastructure, understand the true cost of per-minute billing, and see why OllaNode chose Rust and Apache-2.0.': 'Compare Mux vs self-hosted video infra.',
+    'Discover OllaNode, an Apache-2.0 self-hosted video infrastructure platform with VOD, HLS, CDN, storage, DNS, edge functions, and AI-agent governance.': 'Self-hosted video infra with VOD & CDN.',
+  };
+  if (shortDescMap[desc]) return shortDescMap[desc];
+
+  if (desc.length > 65) {
+    const truncated = desc.slice(0, 60);
+    const lastSpace = truncated.lastIndexOf(' ');
+    return (lastSpace > 35 ? truncated.slice(0, lastSpace) : truncated).trim() + '…';
+  }
+  return desc;
+}
+
+const archiveCategories = categories
+  .filter((c) => c.tag !== 'all')
+  .map((cat) => {
+    const matchingPosts = posts.filter((p) => getPostCategoryKey(p) === cat.tag);
+    return {
+      label: cat.label,
+      tag: cat.tag,
+      posts: matchingPosts,
+    };
+  })
+  .filter((group) => group.posts.length > 0);
 ---
 
 <BaseLayout>
-  <section class="hero">
-    <h1 class="hero-title">{SITE.brand} <span>Blog</span></h1>
-    <p class="hero-tagline">{SITE.description}</p>
+  <!-- 1. Horizontal Category Strip with "All" chip and dynamic filtering -->
+  <nav class="category-strip" aria-label="Blog Categories">
+    <div class="container-wide">
+      <div class="category-strip-inner">
+        {
+          categories.map((cat, index) => (
+            <a href={cat.href} data-cat={cat.tag} class:list={['category-chip', { active: index === 0 }]}>
+              {cat.label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </nav>
+
+  <!-- 3. Main 3-Column Layout Section (Sticky Sidebars + Middle Feed) -->
+  <section id="articles" class="blog-layout-section">
+    <div class="container-wide">
+      <div class="nh-layout-grid">
+        
+        <!-- Left Sticky Sidebar: Featured Recent 4 Blogs (Purple Badge) -->
+        <aside class="sidebar-col sidebar-left">
+          <div class="sticky-sidebar">
+            <span class="badge-pill founder-badge-purple">FEATURED</span>
+            
+            <ul class="article-links-list">
+              {
+                recentFour.map((p) => (
+                  <li>
+                    <a href={`/blog/${p.slug}/`} class="link-item" title={p.data.title}>
+                      {formatSidebarTitle(p.data.title)}
+                    </a>
+                  </li>
+                ))
+              }
+              <li>
+                <a href="/blog/introducing-ollanode/#ollanodes-vod-pipeline-one-upload-a-full-production-line" class="link-item" title="OllaNode VOD Pipeline: Architecture & Steps">
+                  VOD Pipeline Architecture
+                </a>
+              </li>
+              <li>
+                <a href="/blog/introducing-ollanode/#under-the-hood-a-rust-workspace-not-a-monolith" class="link-item" title="Under the Hood: Rust Workspace on Axum">
+                  Rust Workspace on Axum
+                </a>
+              </li>
+              <li>
+                <a href="/blog/introducing-ollanode/#built-for-ai-agents-with-guardrails" class="link-item" title="Built for AI Agents, With Guardrails">
+                  AI Agents with Guardrails
+                </a>
+              </li>
+            </ul>
+
+            <a href="/blog/introducing-ollanode/" class="view-all-btn-purple">View All →</a>
+          </div>
+        </aside>
+
+        <!-- Center Column: Middle Scrolling Blog Feed -->
+        <main class="feed-col">
+          <!-- Section Title Header inside Middle Feed Column -->
+          <div class="feed-header-wrap">
+            <h2 class="feed-section-title">OllaNode Infrastructure & Engineering Blog</h2>
+            <p class="feed-section-subtitle">Expert articles on video delivery, edge compute, AI infrastructure & cloud storage</p>
+          </div>
+
+          <!-- Sub-header bar -->
+          <div class="newest-header-bar">
+            <span class="badge-pill newest-badge">
+              <svg class="flame-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 23c-4.97 0-9-3.58-9-8 0-4.19 3.01-7.26 5.88-10.12.55-.55 1.12-1.09 1.67-1.65.34-.35.88-.23 1.05.21.68 1.76 1.95 3.39 3.2 4.41 1.72 1.41 3.2 2.65 3.2 5.15 0 .68-.09 1.34-.26 1.97-.1.35.21.68.56.59 1.54-.38 2.7-1.46 3.23-2.86.09-.23.4-.29.56-.1 1.25 1.52 1.91 3.27 1.91 5.4 0 4.42-4.03 8-9 8zm-1.87-4.47c1.78.68 3.51.15 4.31-.61.47-.45.74-1.07.78-1.72.03-.59-.19-1.2-.56-1.74-.53-.78-1.42-1.57-2.34-2.39-.77.85-1.54 1.83-1.89 2.92-.37 1.14-.23 2.5.7 3.54z"/>
+              </svg>
+              NEWEST ARTICLES
+            </span>
+            <span class="newest-subtitle-text">Latest from our experts</span>
+          </div>
+
+          <!-- Featured Main Hero Card -->
+          {
+            featured ? (
+              <div id="featured" class="featured-main-card featured-main-card-no-img" data-category={getPostCategoryKey(featured)}>
+                <div class="featured-content-wrapper">
+                  <div class="featured-top-tag">
+                    <span class="pill-tag-new">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 23c-4.97 0-9-3.58-9-8 0-4.19 3.01-7.26 5.88-10.12.55-.55 1.12-1.09 1.67-1.65.34-.35.88-.23 1.05.21.68 1.76 1.95 3.39 3.2 4.41 1.72 1.41 3.2 2.65 3.2 5.15 0 .68-.09 1.34-.26 1.97-.1.35.21.68.56.59 1.54-.38 2.7-1.46 3.23-2.86.09-.23.4-.29.56-.1 1.25 1.52 1.91 3.27 1.91 5.4 0 4.42-4.03 8-9 8z"/>
+                      </svg>
+                      FEATURED
+                    </span>
+                  </div>
+
+                  <div class="featured-category-badge">{featured.data.tags[0] || 'Engineering'}</div>
+
+                  <h3 class="featured-title">
+                    <a href={`/blog/${featured.slug}/`}>{featured.data.title}</a>
+                  </h3>
+
+                  <p class="featured-desc">{featured.data.description}</p>
+
+                  <div class="featured-footer-meta">
+                    <span class="read-time">{readingTime(featured.body)} min read</span>
+                    <span class="meta-dot">•</span>
+                    <a href={`/blog/${featured.slug}/`} class="read-article-link">Read article →</a>
+                  </div>
+                </div>
+              </div>
+            ) : null
+          }
+
+          <!-- All Other Blog Cards Grid (Yellow Borders) Below Big Featured Card -->
+          <div class="subcards-grid">
+            {rest.map((post, index) => (
+              <div class:list={['subcard-item', { 'hide-on-phone': index >= 3 }]} data-category={getPostCategoryKey(post)}>
+                <span class="subcard-tag">{post.data.tags[0] || 'Article'}</span>
+                <h4 class="subcard-title">
+                  <a href={`/blog/${post.slug}/`}>
+                    <span class="subcard-title-desktop">{post.data.title}</span>
+                    <span class="subcard-title-mobile">{formatMobileSubcardTitle(post.data.title)}</span>
+                  </a>
+                </h4>
+                <p class="subcard-desc">
+                  <span class="subcard-desc-desktop">{post.data.description}</span>
+                  <span class="subcard-desc-mobile">{formatMobileSubcardDesc(post.data.description)}</span>
+                </p>
+                <div class="subcard-meta-footer">
+                  <span class="subcard-read-time">{readingTime(post.body)} min</span>
+                  <a href={`/blog/${post.slug}/`} class="subcard-read-link">
+                    <span class="subcard-read-text-desktop">Read article →</span>
+                    <span class="subcard-read-text-mobile">Read →</span>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Container for fallback if category filter has no posts -->
+          <div id="no-category-posts" style="display: none; padding: 2rem 0; text-align: center; color: var(--muted);">
+            <p>No articles found for this category.</p>
+          </div>
+        </main>
+
+        <!-- Right Sticky Sidebar: Orange Headings & Contact Button + White Capsules & Short Bullets -->
+        <aside class="sidebar-col sidebar-right">
+          <div class="sticky-sidebar">
+            <!-- 1. Quick Jump Links (White Capsules, 2 per row, NO icons) -->
+            <div class="sidebar-block">
+              <span class="badge-pill orange-badge">QUICK JUMP LINKS</span>
+              
+              <div class="quick-jump-capsules-grid">
+                {
+                  quickJumpLinks.map((link) => (
+                    <a href={link.href} class="quick-jump-capsule-white">
+                      {link.label}
+                    </a>
+                  ))
+                }
+              </div>
+            </div>
+
+            <!-- 2. Pricing Section (Very Short Bullets, NO Cards) -->
+            <div id="pricing-tab" class="sidebar-block">
+              <span class="badge-pill orange-badge">PLATFORM PRICING</span>
+
+              <ul class="simple-pricing-bullets">
+                <li>
+                  <span class="pricing-bullet-title">Self-Hosted ($0)</span> — Unlimited VOD, WhisperX Transcripts, Edge CDN & S3 Storage.
+                </li>
+                <li>
+                  <span class="pricing-bullet-title">Enterprise (Custom)</span> — Dedicated Edge Nodes, 99.99% SLA & 24/7 Support.
+                </li>
+              </ul>
+            </div>
+
+            <!-- 3. Contact Engineering Button (Orange with Yellow Accent) -->
+            <div class="sidebar-contact-block">
+              <a href={`${SITE.marketingUrl}#contact`} target="_blank" rel="noopener noreferrer" class="sidebar-contact-btn-orange">
+                Contact Engineering ↗
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Complete Blog Archive Section (Dynamic Category Groups with Real Posts) -->
+      <div id="archive" class="archive-section">
+        <h2 class="archive-title">Complete Blog Archive</h2>
+        <p class="archive-subtitle">Browse all engineering articles, tutorials, and release updates by category.</p>
+        
+        <div class="archive-grid">
+          {
+            archiveCategories.map((group) => (
+              <div class="archive-group">
+                <h3 class="group-title">
+                  {group.label} <span class="group-count">({group.posts.length})</span>
+                </h3>
+                <ul class="archive-list">
+                  {group.posts.map((post) => (
+                    <li>
+                      <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Contribute / Contact CTA Banner matching screenshot -->
+      <div class="contribute-banner">
+        <div class="contribute-banner-left">
+          <div class="contribute-icon-wrap" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </div>
+          <div class="contribute-text-wrap">
+            <h3 class="contribute-title">Have an idea or want to contribute?</h3>
+            <p class="contribute-desc">We'd love to hear from you. Join our community of builders.</p>
+          </div>
+        </div>
+
+        <div class="contribute-banner-right">
+          <a href={`${SITE.marketingUrl}#contact`} target="_blank" rel="noopener noreferrer" class="btn-contact-eng">
+            <span>Contact Engineering</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
   </section>
 
-  {posts.length === 0 && <p class="empty">No posts yet — check back soon.</p>}
 
-  {
-    featured && (
-      <a class="featured" href={`/blog/${featured.slug}/`}>
-        <span class="featured-label">Latest</span>
-        <h2 class="featured-title">{featured.data.title}</h2>
-        <p class="featured-desc">{featured.data.description}</p>
-        <span class="featured-more">Read article →</span>
-      </a>
-    )
-  }
 
-  {
-    rest.length > 0 && (
-      <div class="post-list">
-        {rest.map((p) => (
-          <PostCard
-            url={`/blog/${p.slug}/`}
-            title={p.data.title}
-            description={p.data.description}
-            pubDate={p.data.pubDate}
-            tags={p.data.tags}
-            minutes={readingTime(p.body)}
-          />
-        ))}
-      </div>
-    )
-  }
+  <!-- Interactive Category Filtering Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const chips = document.querySelectorAll<HTMLAnchorElement>('.category-chip');
+      const cards = document.querySelectorAll<HTMLElement>('[data-category]');
+      const noPostsMsg = document.getElementById('no-category-posts');
+
+      function filterCategory(cat: string) {
+        const targetCat = cat.toLowerCase().trim();
+        const subcardsGrid = document.querySelector<HTMLElement>('.subcards-grid');
+
+        // Update active chip state
+        chips.forEach((c) => {
+          const chipCat = (c.getAttribute('data-cat') || '').toLowerCase().trim();
+          if (chipCat === targetCat) {
+            c.classList.add('active');
+          } else {
+            c.classList.remove('active');
+          }
+        });
+
+        if (subcardsGrid) {
+          if (targetCat === 'all') {
+            subcardsGrid.classList.remove('is-filtered');
+          } else {
+            subcardsGrid.classList.add('is-filtered');
+          }
+        }
+
+        // Filter middle feed cards (exact category match: only that category appears!)
+        let visibleCount = 0;
+        cards.forEach((card) => {
+          const cardCat = (card.getAttribute('data-category') || '').toLowerCase().trim();
+          
+          if (targetCat === 'all' || cardCat === targetCat) {
+            card.style.display = '';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        if (noPostsMsg) {
+          noPostsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+      }
+
+      chips.forEach((chip) => {
+        chip.addEventListener('click', (e) => {
+          e.preventDefault();
+          const cat = chip.getAttribute('data-cat') || 'all';
+          filterCategory(cat);
+        });
+      });
+
+      // Quick jump links category trigger
+      document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
+        const href = link.getAttribute('href') || '';
+        const catKey = href.replace('#', '').toLowerCase().trim();
+        const validCats = ['product', 'guides', 'comparisons', 'video', 'ai', 'engineering', 'security', 'all'];
+        if (validCats.includes(catKey)) {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            filterCategory(catKey);
+            document.getElementById('articles')?.scrollIntoView({ behavior: 'smooth' });
+          });
+        }
+      });
+
+      // Hide categories strip when user reaches Complete Blog Archive
+      const categoryStrip = document.querySelector<HTMLElement>('.category-strip');
+      const archiveSection = document.getElementById('archive');
+
+      if (categoryStrip && archiveSection) {
+        const updateStripVisibility = () => {
+          const rect = archiveSection.getBoundingClientRect();
+          // When top of archive section reaches near top (approx header height + buffer), hide strip
+          if (rect.top <= 110) {
+            categoryStrip.classList.add('strip-hidden');
+          } else {
+            categoryStrip.classList.remove('strip-hidden');
+          }
+        };
+
+        window.addEventListener('scroll', updateStripVisibility, { passive: true });
+        window.addEventListener('resize', updateStripVisibility, { passive: true });
+        updateStripVisibility();
+      }
+    });
+  </script>
 </BaseLayout>

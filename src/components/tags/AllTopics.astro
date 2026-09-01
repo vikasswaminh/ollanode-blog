@@ -1,0 +1,804 @@
+---
+import type { TagCategory, TopicTag } from '../../utils/tags';
+
+interface Props {
+  categories: TagCategory[];
+  allTopics: TopicTag[];
+  popularTopics?: TopicTag[];
+}
+
+const { categories, allTopics, popularTopics = [] } = Astro.props;
+---
+
+<section class="categorized-topics-section" id="all-topics-container">
+  <div class="container-editorial">
+
+    <!-- Section Header Row -->
+    <div class="topics-section-header">
+      <div>
+        <span class="badge-pill orange-badge">TOPIC DIRECTORY</span>
+        <h2 class="topics-main-title">Browse by Technical Category</h2>
+        <p class="topics-main-subtitle">
+          Select a category on the left to highlight and explore all related architectures, protocols, and guides.
+        </p>
+      </div>
+      <div class="topics-stats-pills">
+        <span class="stat-pill-item">
+          <strong>{allTopics.length}</strong> Total Topics
+        </span>
+        <span class="stat-pill-item">
+          <strong>{categories.length}</strong> Categories
+        </span>
+      </div>
+    </div>
+
+    <!-- Master Two-Column Layout: Categories on Left, Tags on Right -->
+    <div class="categorized-topics-layout">
+
+      <!-- 1. Left-Hand Side: Sticky Categories Navigation -->
+      <aside class="categories-sidebar-col" aria-label="Topic Categories">
+        <div class="categories-nav-box">
+          <div class="sidebar-header-row">
+            <span class="sidebar-title">Categories</span>
+            <span class="sidebar-count">{categories.length + 1}</span>
+          </div>
+
+          <div class="categories-buttons-list" id="category-nav-list" role="tablist">
+            <!-- "All Topics" Button -->
+            <button
+              type="button"
+              class="cat-nav-btn is-active"
+              data-category-target="all"
+              role="tab"
+              aria-selected="true"
+              id="cat-btn-all"
+            >
+              <span class="cat-btn-icon">🌐</span>
+              <span class="cat-btn-text">
+                <span class="cat-btn-name">All Topics</span>
+                <span class="cat-btn-sub">View full directory</span>
+              </span>
+              <span class="cat-btn-badge">{allTopics.length}</span>
+            </button>
+
+            <!-- "Popular & Core" Button -->
+            {popularTopics.length > 0 && (
+              <button
+                type="button"
+                class="cat-nav-btn"
+                data-category-target="popular"
+                role="tab"
+                aria-selected="false"
+                id="cat-btn-popular"
+              >
+                <span class="cat-btn-icon">🔥</span>
+                <span class="cat-btn-text">
+                  <span class="cat-btn-name">Featured & Core</span>
+                  <span class="cat-btn-sub">Essential platform pillars</span>
+                </span>
+                <span class="cat-btn-badge">{popularTopics.length}</span>
+              </button>
+            )}
+
+            <!-- Individual Categories -->
+            {categories.map((cat) => (
+              <button
+                type="button"
+                class="cat-nav-btn"
+                data-category-target={cat.id}
+                role="tab"
+                aria-selected="false"
+                id={`cat-btn-${cat.id}`}
+              >
+                <span class="cat-btn-icon">{cat.icon}</span>
+                <span class="cat-btn-text">
+                  <span class="cat-btn-name">{cat.name}</span>
+                  <span class="cat-btn-sub">{cat.tags.length} {cat.tags.length === 1 ? 'tag' : 'tags'}</span>
+                </span>
+                <span class="cat-btn-badge">{cat.tags.length}</span>
+              </button>
+            ))}
+          </div>
+
+          <!-- Bottom Sidebar Helper -->
+          <div class="sidebar-footer-tip">
+            <span class="tip-icon">💡</span>
+            <p>Click any category to jump and spotlight its tags. Use <kbd>/</kbd> to search.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 2. Right-Hand Side: Dedicated Tags Scrolling Container -->
+      <div class="tags-scroll-column">
+        <!-- Tags Scroll Viewport -->
+        <div class="tags-scroll-viewport" id="tags-scroll-pane" tabindex="0" role="region" aria-label="Tags Directory">
+
+          <!-- Popular & Core Section (At Top of Scroll Pane) -->
+          {popularTopics.length > 0 && (
+            <section
+              class="category-group-section"
+              id="cat-group-popular"
+              data-category-id="popular"
+            >
+              <div class="cat-group-header">
+                <div class="cat-group-title-row">
+                  <span class="cat-group-icon">🔥</span>
+                  <h3 class="cat-group-name">Featured & Core Topics</h3>
+                  <span class="cat-group-tag-count">{popularTopics.length} Topics</span>
+                </div>
+                <p class="cat-group-desc">
+                  Core areas of focus across our engineering deep dives and production guides.
+                </p>
+              </div>
+
+              <div class="cat-tags-grid">
+                {popularTopics.map((t) => (
+                  <a
+                    href={`/tags/${t.slug}/`}
+                    class="tag-card-item topic-item"
+                    data-topic-name={t.name.toLowerCase()}
+                    data-category-id="popular"
+                  >
+                    <div class="tag-card-left">
+                      <span class="tag-card-hash">#</span>
+                      <div class="tag-card-details">
+                        <span class="tag-card-title">{t.name}</span>
+                        {t.description && <span class="tag-card-micro-desc">{t.description}</span>}
+                      </div>
+                    </div>
+                    <span class="tag-card-count">{t.articleCount} {t.articleCount === 1 ? 'Article' : 'Articles'}</span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- All Category Sections -->
+          {categories.map((cat) => (
+            <section
+              class="category-group-section"
+              id={`cat-group-${cat.id}`}
+              data-category-id={cat.id}
+            >
+              <div class="cat-group-header">
+                <div class="cat-group-title-row">
+                  <span class="cat-group-icon">{cat.icon}</span>
+                  <h3 class="cat-group-name">{cat.name}</h3>
+                  <span class="cat-group-tag-count">{cat.tags.length} {cat.tags.length === 1 ? 'Topic' : 'Topics'}</span>
+                </div>
+                <p class="cat-group-desc">{cat.description}</p>
+              </div>
+
+              <div class="cat-tags-grid">
+                {cat.tags.map((t) => (
+                  <a
+                    href={`/tags/${t.slug}/`}
+                    class="tag-card-item topic-item"
+                    data-topic-name={t.name.toLowerCase()}
+                    data-category-id={cat.id}
+                  >
+                    <div class="tag-card-left">
+                      <span class="tag-card-hash">#</span>
+                      <span class="tag-card-title">{t.name}</span>
+                    </div>
+                    <span class="tag-card-count">{t.articleCount} {t.articleCount === 1 ? 'Article' : 'Articles'}</span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))}
+
+          <!-- Empty State for Live Search -->
+          <div id="no-topics-found" class="no-topics-state" style="display: none;">
+            <div class="no-topics-icon">🔍</div>
+            <h3 class="no-topics-title">No matching topics found</h3>
+            <p class="no-topics-desc">We couldn't find any topic matching your search. Try searching for "AI", "Cloud", "HLS", or "Rust".</p>
+            <button type="button" id="clear-search-btn" class="btn-clear-search">Clear Search</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .categorized-topics-section {
+    width: 100%;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  .container-editorial {
+    max-width: 82rem;
+    margin: 0 auto;
+  }
+
+  /* Header Row */
+  .topics-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.25rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .badge-pill.orange-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ff6600;
+    background: rgba(255, 102, 0, 0.08);
+    border: 1px solid rgba(255, 102, 0, 0.22);
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    margin-bottom: 0.6rem;
+  }
+
+  .topics-main-title {
+    font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--text);
+    margin: 0 0 0.5rem;
+    font-family: var(--font);
+  }
+
+  .topics-main-subtitle {
+    font-size: 0.98rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0;
+    max-width: 44rem;
+  }
+
+  .topics-stats-pills {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-shrink: 0;
+  }
+
+  .stat-pill-item {
+    font-size: 0.82rem;
+    color: var(--muted);
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .stat-pill-item strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  /* Two Column Layout */
+  .categorized-topics-layout {
+    display: grid;
+    grid-template-columns: 310px 1fr;
+    gap: 2.25rem;
+    align-items: start;
+  }
+
+  /* 1. Left Sidebar: Categories Navigation */
+  .categories-sidebar-col {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+    z-index: 20;
+  }
+
+  .categories-nav-box {
+    background: #ffffff;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem 1rem;
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.03);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .categories-nav-box {
+      background: var(--bg-soft);
+    }
+  }
+
+  .sidebar-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.4rem 0.85rem;
+    margin-bottom: 0.65rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-title {
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .sidebar-count {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #ff6600;
+    background: rgba(255, 102, 0, 0.08);
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+  }
+
+  .categories-buttons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .cat-nav-btn {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid transparent;
+    border-radius: 12px;
+    padding: 0.75rem 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: left;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    color: var(--text);
+  }
+
+  .cat-nav-btn:hover {
+    background: var(--bg-soft);
+    border-color: var(--border);
+    transform: translateX(3px);
+  }
+
+  .cat-nav-btn.is-active {
+    background: rgba(255, 102, 0, 0.08);
+    border-color: #ff6600;
+    box-shadow: 0 4px 14px -2px rgba(255, 102, 0, 0.15);
+    transform: translateX(4px);
+  }
+
+  .cat-btn-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .cat-btn-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .cat-btn-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cat-nav-btn.is-active .cat-btn-name {
+    color: #ff6600;
+  }
+
+  .cat-btn-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.15rem;
+    line-height: 1.2;
+  }
+
+  .cat-btn-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    padding: 0.18rem 0.5rem;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .cat-nav-btn.is-active .cat-btn-badge {
+    background: #ff6600;
+    color: #ffffff;
+    border-color: #ff6600;
+  }
+
+  .sidebar-footer-tip {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .tip-icon {
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+
+  .sidebar-footer-tip p {
+    font-size: 0.76rem;
+    color: var(--muted);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .sidebar-footer-tip kbd {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    padding: 0.05rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+  }
+
+  /* 2. Right Tags Scroll Pane */
+  .tags-scroll-column {
+    min-width: 0;
+  }
+
+  .tags-scroll-viewport {
+    max-height: 820px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-right: 0.75rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 102, 0, 0.4) transparent;
+  }
+
+  .tags-scroll-viewport::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .tags-scroll-viewport::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .tags-scroll-viewport::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 102, 0, 0.35);
+    border-radius: 6px;
+  }
+
+  .tags-scroll-viewport::-webkit-scrollbar-thumb:hover {
+    background-color: #ff6600;
+  }
+
+  /* Category Group Section */
+  .category-group-section {
+    background: #ffffff;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem 1.65rem 2rem;
+    margin-bottom: 1.75rem;
+    transition: all 0.25s ease;
+    scroll-margin-top: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .category-group-section {
+      background: var(--bg-soft);
+    }
+  }
+
+  /* Section spotlighted state when active */
+  .category-group-section.is-section-active {
+    border-color: rgba(255, 102, 0, 0.5);
+    box-shadow: 0 8px 28px -6px rgba(255, 102, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .cat-group-header {
+    margin-bottom: 1.35rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cat-group-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .cat-group-icon {
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+
+  .cat-group-name {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0;
+    font-family: var(--font);
+    letter-spacing: -0.015em;
+  }
+
+  .cat-group-tag-count {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    padding: 0.18rem 0.55rem;
+    border-radius: 6px;
+    margin-left: auto;
+  }
+
+  .cat-group-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Tag Cards Grid */
+  .cat-tags-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+  }
+
+  @media (max-width: 1200px) {
+    .cat-tags-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .cat-tags-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Individual Tag Card */
+  .tag-card-item {
+    background: #ffffff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tag-card-item {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  }
+
+  .tag-card-item:hover {
+    border-color: #ff6600;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px -2px rgba(255, 102, 0, 0.15);
+    background: #fffdfa;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tag-card-item:hover {
+      background: rgba(255, 102, 0, 0.08);
+    }
+  }
+
+  /* Highlighted state when category is selected! */
+  .tag-card-item.is-highlighted {
+    border-color: #ff6600 !important;
+    background: rgba(255, 102, 0, 0.08) !important;
+    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.22), 0 6px 18px -2px rgba(255, 102, 0, 0.16) !important;
+    animation: tagHighlightPulse 0.4s ease;
+  }
+
+  .tag-card-item.is-highlighted .tag-card-title {
+    color: #ff6600 !important;
+    font-weight: 700;
+  }
+
+  .tag-card-item.is-highlighted .tag-card-count {
+    border-color: rgba(255, 102, 0, 0.35);
+    color: #ff6600;
+    background: rgba(255, 102, 0, 0.12);
+  }
+
+  /* Dimmed state when another category is focused */
+  .tag-card-item.is-dimmed {
+    opacity: 0.45;
+  }
+
+  .tag-card-item.is-dimmed:hover {
+    opacity: 1;
+  }
+
+  @keyframes tagHighlightPulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.03);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .tag-card-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .tag-card-hash {
+    color: #ff6600;
+    font-weight: 800;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  .tag-card-details {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .tag-card-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s ease;
+  }
+
+  .tag-card-item:hover .tag-card-title {
+    color: #ff6600;
+  }
+
+  .tag-card-micro-desc {
+    font-size: 0.72rem;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 0.15rem;
+  }
+
+  .tag-card-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--bg-soft);
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    margin-left: 0.65rem;
+    transition: all 0.15s ease;
+  }
+
+  /* Empty Search State */
+  .no-topics-state {
+    text-align: center;
+    padding: 4.5rem 1.5rem;
+    background: var(--bg-soft);
+    border: 1.5px dashed var(--border);
+    border-radius: 16px;
+  }
+
+  .no-topics-icon {
+    font-size: 2.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .no-topics-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0 0 0.5rem;
+  }
+
+  .no-topics-desc {
+    font-size: 0.92rem;
+    color: var(--muted);
+    max-width: 28rem;
+    margin: 0 auto 1.5rem;
+    line-height: 1.55;
+  }
+
+  .btn-clear-search {
+    background: #111827;
+    color: #ffffff;
+    border: 1px solid #111827;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 0.6rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .btn-clear-search:hover {
+    background: #ff6600;
+    border-color: #ff6600;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 102, 0, 0.25);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 960px) {
+    .categorized-topics-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .categories-sidebar-col {
+      position: static;
+      margin-bottom: 1.5rem;
+    }
+
+    .categories-buttons-list {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      white-space: nowrap;
+      gap: 0.5rem;
+      padding-bottom: 0.5rem;
+      scrollbar-width: thin;
+    }
+
+    .cat-nav-btn {
+      width: auto;
+      flex-shrink: 0;
+      padding: 0.6rem 0.95rem;
+    }
+
+    .cat-btn-sub {
+      display: none;
+    }
+
+    .sidebar-footer-tip {
+      display: none;
+    }
+
+    .tags-scroll-viewport {
+      max-height: none;
+      overflow-y: visible;
+      padding-right: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .topics-section-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .topics-stats-pills {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+</style>

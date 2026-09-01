@@ -1,0 +1,77 @@
+---
+import TopicSearch from './TopicSearch.astro';
+---
+
+<section class="tags-editorial-hero">
+  <div class="tags-hero-content">
+    <h1 class="tags-hero-heading">Explore Topics</h1>
+    <p class="tags-hero-subheading">
+      Discover insights, guides, and ideas across technology, infrastructure, AI, networking, and more.
+    </p>
+    <TopicSearch />
+  </div>
+</section>
+
+<style>
+  .tags-editorial-hero {
+    width: 100%;
+    padding: 4.5rem 1.5rem 3.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: #ffffff;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tags-editorial-hero {
+      background: var(--bg);
+    }
+  }
+
+  .tags-hero-content {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .tags-hero-heading {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    color: var(--text);
+    margin: 0 0 1rem;
+    font-family: var(--font);
+  }
+
+  .tags-hero-subheading {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 40rem;
+    margin: 0 auto;
+    font-weight: 400;
+  }
+
+  @media (max-width: 1024px) {
+    .tags-editorial-hero {
+      padding: 3.5rem 1.25rem 2.75rem;
+    }
+    .tags-hero-heading {
+      font-size: 1.85rem;
+    }
+    .tags-hero-subheading {
+      font-size: 0.92rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tags-editorial-hero {
+      padding: 2.5rem 1rem 2rem;
+    }
+    .tags-hero-heading {
+      font-size: 1.45rem;
+    }
+    .tags-hero-subheading {
+      font-size: 0.84rem;
+    }
+  }
+</style>

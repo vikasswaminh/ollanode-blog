@@ -1,0 +1,223 @@
+---
+import type { TopicTag } from '../../utils/tags';
+
+interface Props {
+  topics: TopicTag[];
+}
+
+const { topics } = Astro.props;
+---
+
+<section class="popular-topics-section" id="popular-topics-container">
+  <div class="container-editorial">
+    <div class="section-header-editorial">
+      <h2 class="section-title-editorial">Popular Topics</h2>
+      <p class="section-subtitle-editorial">Core areas of focus across our engineering and product guides</p>
+    </div>
+
+    <div class="popular-topics-grid">
+      {
+        topics.map((t) => (
+          <a
+            href={`/tags/${t.slug}/`}
+            class="popular-topic-card topic-item"
+            data-topic-name={t.name.toLowerCase()}
+          >
+            <div class="popular-card-top">
+              <span class="topic-tag-hash">#</span>
+              <span class="popular-topic-count">{t.articleCount} {t.articleCount === 1 ? 'Article' : 'Articles'}</span>
+            </div>
+            <h3 class="popular-topic-name">{t.name}</h3>
+            {t.description && <p class="popular-topic-desc">{t.description}</p>}
+            <div class="popular-topic-action">
+              <span>View articles</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .popular-topics-section {
+    width: 100%;
+    padding: 3.5rem 1.5rem 2rem;
+  }
+
+  .container-editorial {
+    max-width: 78rem;
+    margin: 0 auto;
+  }
+
+  .section-header-editorial {
+    margin-bottom: 2rem;
+  }
+
+  .section-title-editorial {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--text);
+    margin: 0 0 0.4rem;
+    font-family: var(--font);
+  }
+
+  .section-subtitle-editorial {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .popular-topics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 960px) {
+    .popular-topics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .section-title-editorial {
+      font-size: 1.25rem;
+    }
+    .section-subtitle-editorial {
+      font-size: 0.84rem;
+    }
+    .popular-topic-name {
+      font-size: 1.05rem;
+    }
+    .popular-topic-desc {
+      font-size: 0.8rem;
+    }
+    .popular-topic-action {
+      font-size: 0.76rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .popular-topics-section {
+      padding: 2.5rem 1rem 1.5rem;
+    }
+    .popular-topics-grid {
+      grid-template-columns: 1fr;
+    }
+    .popular-topic-card {
+      padding: 1.1rem;
+    }
+    .section-title-editorial {
+      font-size: 1.12rem;
+    }
+    .section-subtitle-editorial {
+      font-size: 0.78rem;
+    }
+    .popular-topic-name {
+      font-size: 0.94rem;
+    }
+    .popular-topic-desc {
+      font-size: 0.74rem;
+    }
+    .popular-topic-action {
+      font-size: 0.74rem;
+    }
+  }
+
+  .popular-topic-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    position: relative;
+  }
+
+  .popular-topic-card:hover {
+    border-color: #ff6600;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px -4px rgba(255, 102, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .popular-topic-card {
+      background: var(--bg-soft);
+    }
+  }
+
+  .popular-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .topic-tag-hash {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #ff6600;
+  }
+
+  .popular-topic-count {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--bg-soft);
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .popular-topic-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+    transition: color 0.15s ease;
+  }
+
+  .popular-topic-card:hover .popular-topic-name {
+    color: #ff6600;
+  }
+
+  .popular-topic-desc {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--muted);
+    margin: 0 0 1.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .popular-topic-action {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #ff6600;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  .popular-topic-action svg {
+    transition: transform 0.15s ease;
+  }
+
+  .popular-topic-card:hover .popular-topic-action svg {
+    transform: translateX(3px);
+  }
+</style>

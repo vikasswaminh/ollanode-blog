@@ -3,15 +3,61 @@ import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { SITE } from '../config';
-import { readingTime } from '../utils/posts';
+import { getPublishedPosts, readingTime } from '../utils/posts';
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  headings?: { depth: number; slug: string; text: string }[];
 }
-const { post } = Astro.props;
-const { title, description, pubDate, updatedDate, author, tags, cover } = post.data;
+
+const { post, headings = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, author, tags = [] } = post.data;
 const minutes = readingTime(post.body);
 const canonical = new URL(`/blog/${post.slug}/`, Astro.site).href;
+
+// Filter H2 and H3 for Table of Contents (exclude numbered FAQ items)
+const tocHeadings = headings.filter((h) => h.depth === 2 || (h.depth === 3 && !/^\d+\./.test(h.text)));
+
+// Query real published blog posts for Related Reading
+const allPublished = await getPublishedPosts();
+const otherPosts = allPublished.filter((p) => p.slug !== post.slug);
+
+// Score posts by topic relevance (matching category or overlapping tags)
+const currentCategory = (post.data.category || tags[0] || '').toLowerCase();
+const currentTags = tags.map((t) => t.toLowerCase());
+
+const scoredPosts = otherPosts.map((p) => {
+  let score = 0;
+  const pCategory = (p.data.category || p.data.tags?.[0] || '').toLowerCase();
+  if (pCategory && currentCategory && pCategory === currentCategory) {
+    score += 5;
+  }
+  const pTags = (p.data.tags || []).map((t) => t.toLowerCase());
+  const sharedTags = pTags.filter((t) => currentTags.includes(t));
+  score += sharedTags.length * 2;
+
+  return {
+    post: p,
+    score,
+  };
+});
+
+// Sort by relevance score (descending), then by publication date (newest first)
+scoredPosts.sort((a, b) => {
+  if (b.score !== a.score) {
+    return b.score - a.score;
+  }
+  return b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf();
+});
+
+const relatedArticles = scoredPosts.slice(0, 5).map(({ post: p }) => ({
+  title: p.data.title,
+  category: p.data.category || p.data.tags?.[0] || 'Article',
+  desc: p.data.description,
+  href: `/blog/${p.slug}/`,
+}));
+
+const primaryCategory = post.data.category || tags[0] || 'Product & Changelog';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -23,14 +69,12 @@ const jsonLd = {
   author: { '@type': 'Organization', name: author ?? SITE.author },
   publisher: { '@type': 'Organization', name: SITE.brand },
   mainEntityOfPage: canonical,
-  ...(cover ? { image: new URL(cover, Astro.site).href } : {}),
 };
 ---
 
 <BaseLayout
   title={title}
   description={description}
-  image={cover}
   article={{
     publishedTime: pubDate.toISOString(),
     modifiedTime: (updatedDate ?? pubDate).toISOString(),
@@ -38,36 +82,119 @@ const jsonLd = {
     tags,
   }}
 >
-  <article class="post">
-    <header class="post-header">
-      <p class="post-eyebrow"><a href="/">← All posts</a></p>
-      <h1 class="post-title">{title}</h1>
-      <p class="post-meta">
-        <FormattedDate date={pubDate} />
-        <span aria-hidden="true">·</span>
-        <span>{minutes} min read</span>
-        {author && <span aria-hidden="true">·</span>}
-        {author && <span>{author}</span>}
-      </p>
-      {
-        tags && tags.length > 0 && (
-          <p class="post-tags">
-            {tags.map((t) => (
-              <a class="tag" href={`/tags/${t}/`}>
-                #{t}
-              </a>
-            ))}
-          </p>
-        )
-      }
-    </header>
-    {cover && <img class="post-cover" src={cover} alt="" loading="lazy" />}
-    <div class="prose">
-      <slot />
+  <div class="article-page-wrap">
+    <div class="container-wide">
+      <div class="article-3col-layout">
+        
+        <!-- 1. Left Column: Sticky Table of Contents in a Box (Heading: ON THIS PAGE) -->
+        <aside class="sidebar-col sidebar-toc">
+          <div class="sticky-sidebar">
+            <span class="badge-pill founder-badge-purple">ON THIS PAGE</span>
+
+            <div class="toc-card-box">
+              <nav class="toc-nav" aria-label="Table of Contents">
+                <ul class="toc-list">
+                  {
+                    tocHeadings.map((h) => (
+                      <li class:list={['toc-item', `toc-depth-${h.depth}`]}>
+                        <a href={`#${h.slug}`} class="toc-link">
+                          {h.text}
+                        </a>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </nav>
+            </div>
+
+            <a href="/" class="view-all-btn-purple">← Back to Blog Home</a>
+          </div>
+        </aside>
+
+        <!-- 2. Middle Column: Complete Blog Content & Headings (NO Image / Placeholder) -->
+        <main class="article-middle-col">
+          <!-- Breadcrumb navigation -->
+          <nav class="article-breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span class="breadcrumb-sep">›</span>
+            <a href="/">Blog</a>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-current">{title}</span>
+          </nav>
+
+          <!-- Article Header -->
+          <header class="article-header">
+            <div class="article-category-eyebrow">
+              <span class="category-pill-orange">{primaryCategory}</span>
+              <span class="eyebrow-dot">·</span>
+              <FormattedDate date={pubDate} />
+              <span class="eyebrow-dot">·</span>
+              <span>{minutes} min read</span>
+            </div>
+
+            <h1 class="article-main-title">{title}</h1>
+
+            <p class="article-lead-desc">{description}</p>
+
+            <div class="article-author-bar">
+              <div class="author-meta-text">
+                <span>By <strong class="author-name">{author}</strong></span>
+                <span class="meta-dot">·</span>
+                <span>Category: <strong>{primaryCategory}</strong></span>
+                <span class="meta-dot">·</span>
+                <span>Published <FormattedDate date={pubDate} /></span>
+              </div>
+            </div>
+          </header>
+
+          <!-- Article Prose Body -->
+          <div class="prose article-prose-content">
+            <slot />
+          </div>
+
+          <!-- Bottom Article Footer -->
+          <footer class="article-footer-cta">
+            <div class="article-footer-card">
+              <h3>Deploy Self-Hosted Video with OllaNode</h3>
+              <p>Run your own VOD transcoding, adaptive HLS, edge CDN, and AI-governed media storage on your own cloud hardware.</p>
+              <div class="article-footer-actions">
+                <a href={SITE.marketingUrl} target="_blank" rel="noopener noreferrer" class="btn-ollanode-primary">
+                  Explore OllaNode ↗
+                </a>
+              </div>
+            </div>
+          </footer>
+        </main>
+
+        <!-- 3. Right Column: Sticky Related Reading CARDS (Pricing & Contact Removed) -->
+        {
+          relatedArticles.length > 0 && (
+            <aside class="sidebar-col sidebar-related">
+              <div class="sticky-sidebar">
+                <div class="sidebar-block">
+                  <span class="badge-pill orange-badge">RELATED READING</span>
+
+                  <div class="related-cards-stack">
+                    {relatedArticles.map((art) => (
+                      <a href={art.href} class="related-card-item">
+                        <div class="related-card-top">
+                          <span class="related-card-tag">{art.category}</span>
+                          <span class="related-card-arrow">↗</span>
+                        </div>
+                        <h4 class="related-card-title">{art.title}</h4>
+                        <p class="related-card-desc">{art.desc}</p>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </aside>
+          )
+        }
+
+      </div>
     </div>
-    <footer class="post-footer">
-      <a class="btn" href={SITE.marketingUrl}>Learn more about {SITE.brand} →</a>
-    </footer>
-  </article>
+  </div>
+
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </BaseLayout>
