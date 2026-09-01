@@ -438,8 +438,8 @@ const archiveCategories = categories
       if (categoryStrip && archiveSection) {
         const updateStripVisibility = () => {
           const rect = archiveSection.getBoundingClientRect();
-          // When top of archive section reaches near top (approx header height + buffer), hide strip
-          if (rect.top <= 110) {
+          // When top of archive section reaches bottom of sticky header/strip, hide strip
+          if (rect.top <= 125) {
             categoryStrip.classList.add('strip-hidden');
           } else {
             categoryStrip.classList.remove('strip-hidden');

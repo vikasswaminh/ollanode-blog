@@ -484,16 +484,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     grid-template-columns: 240px minmax(0, 1fr);
     gap: 2.75rem;
     padding-top: 2.25rem;
+    align-items: start;
   }
 
   /* Left Column: Sidenav */
   .wai-sidenav-col {
-    position: relative;
+    position: sticky;
+    top: 80px;
+    align-self: start;
+    z-index: 30;
   }
 
   .wai-sidenav-sticky {
     position: sticky;
-    top: 5rem;
+    top: 80px;
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: 10px;
