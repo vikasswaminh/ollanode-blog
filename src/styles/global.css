@@ -2756,12 +2756,55 @@ img { max-width: 100%; height: auto; }
 
 @media (prefers-color-scheme: dark) {
   .featured-main-card {
-    background: #181510;
-    border-color: #7c2d12;
+    background: #14171f !important;
+    border-color: #ea580c !important;
+    box-shadow: 0 4px 20px -4px rgba(234, 88, 12, 0.25) !important;
   }
+
+  .featured-title,
+  .featured-title span {
+    color: #f8fafc !important;
+  }
+
+  .featured-desc {
+    color: #94a3b8 !important;
+  }
+
   .subcard-item {
-    background: #181510;
-    border-color: #7c2d12;
+    background: #14171f !important;
+    border-color: #d97706 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .subcard-item:hover {
+    background: #1a1f2c !important;
+    border-color: #f59e0b !important;
+    box-shadow: 0 6px 20px -2px rgba(245, 158, 11, 0.3) !important;
+  }
+
+  .subcard-title,
+  .subcard-title a,
+  .subcard-title-desktop,
+  .subcard-title-mobile {
+    color: #f8fafc !important;
+  }
+
+  .subcard-desc,
+  .subcard-desc-desktop,
+  .subcard-desc-mobile {
+    color: #94a3b8 !important;
+  }
+
+  .subcard-meta-footer {
+    border-top-color: rgba(245, 158, 11, 0.25) !important;
+  }
+
+  .subcard-read-time {
+    color: #94a3b8 !important;
+  }
+
+  .subcard-read-link {
+    color: #ff7722 !important;
   }
 }
 

@@ -30,8 +30,8 @@ const quickJumpLinks = [
   { label: 'Archive', href: '#archive' },
 ];
 
-function getPostCategoryKey(post: any) {
-  const cat = (post.data.category || post.data.tags?.[0] || '').toLowerCase();
+function getPostCategoryKey(post: any): string {
+  const cat = String(post.data.category || '').toLowerCase().trim();
   if (cat.includes('product') || cat.includes('changelog')) return 'product';
   if (cat.includes('guide') || cat.includes('tutorial')) return 'guides';
   if (cat.includes('comparison')) return 'comparisons';
@@ -39,27 +39,21 @@ function getPostCategoryKey(post: any) {
   if (cat.includes('ai') || cat.includes('agent')) return 'ai';
   if (cat.includes('engineer') || cat.includes('architecture')) return 'engineering';
   if (cat.includes('security') || cat.includes('performance') || cat.includes('edge')) return 'security';
-  return cat;
+
+  const firstTag = String(post.data.tags?.[0] || '').toLowerCase().trim();
+  if (firstTag.includes('product') || firstTag.includes('changelog')) return 'product';
+  if (firstTag.includes('guide') || firstTag.includes('tutorial')) return 'guides';
+  if (firstTag.includes('comparison')) return 'comparisons';
+  if (firstTag.includes('video') || firstTag.includes('cdn')) return 'video';
+  if (firstTag.includes('ai') || firstTag.includes('agent')) return 'ai';
+  if (firstTag.includes('engineer') || firstTag.includes('architecture')) return 'engineering';
+  if (firstTag.includes('security') || firstTag.includes('performance') || firstTag.includes('edge')) return 'security';
+
+  return 'other';
 }
 
 function getPostCategoryKeys(post: any): string[] {
-  const keys = new Set<string>();
-  const allTags = [post.data.category, ...(post.data.tags || [])]
-    .filter(Boolean)
-    .map((t: string) => String(t).toLowerCase());
-
-  for (const tag of allTags) {
-    if (tag.includes('product') || tag.includes('changelog')) keys.add('product');
-    if (tag.includes('guide') || tag.includes('tutorial')) keys.add('guides');
-    if (tag.includes('comparison')) keys.add('comparisons');
-    if (tag.includes('video') || tag.includes('cdn')) keys.add('video');
-    if (tag.includes('ai') || tag.includes('agent')) keys.add('ai');
-    if (tag.includes('engineer') || tag.includes('architecture') || tag.includes('rust')) keys.add('engineering');
-    if (tag.includes('security') || tag.includes('performance') || tag.includes('edge')) keys.add('security');
-  }
-  const primary = getPostCategoryKey(post);
-  if (primary) keys.add(primary);
-  return Array.from(keys);
+  return [getPostCategoryKey(post)];
 }
 
 function formatSidebarTitle(title: string) {
@@ -264,7 +258,7 @@ const archiveCategories = categories
           <div class="subcards-grid">
             {rest.map((post) => (
               <div class="subcard-item" data-category={getPostCategoryKeys(post).join(' ')}>
-                <span class="subcard-tag">{post.data.tags[0] || 'Article'}</span>
+                <span class="subcard-tag">{post.data.category || post.data.tags[0] || 'Article'}</span>
                 <h4 class="subcard-title">
                   <a href={`/blog/${post.slug}/`}>
                     <span class="subcard-title-desktop">{post.data.title}</span>
