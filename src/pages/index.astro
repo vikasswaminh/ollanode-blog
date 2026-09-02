@@ -42,6 +42,26 @@ function getPostCategoryKey(post: any) {
   return cat;
 }
 
+function getPostCategoryKeys(post: any): string[] {
+  const keys = new Set<string>();
+  const allTags = [post.data.category, ...(post.data.tags || [])]
+    .filter(Boolean)
+    .map((t: string) => String(t).toLowerCase());
+
+  for (const tag of allTags) {
+    if (tag.includes('product') || tag.includes('changelog')) keys.add('product');
+    if (tag.includes('guide') || tag.includes('tutorial')) keys.add('guides');
+    if (tag.includes('comparison')) keys.add('comparisons');
+    if (tag.includes('video') || tag.includes('cdn')) keys.add('video');
+    if (tag.includes('ai') || tag.includes('agent')) keys.add('ai');
+    if (tag.includes('engineer') || tag.includes('architecture') || tag.includes('rust')) keys.add('engineering');
+    if (tag.includes('security') || tag.includes('performance') || tag.includes('edge')) keys.add('security');
+  }
+  const primary = getPostCategoryKey(post);
+  if (primary) keys.add(primary);
+  return Array.from(keys);
+}
+
 function formatSidebarTitle(title: string) {
   const shortMap: Record<string, string> = {
     'Building a Production-Grade HLS Transcoding Pipeline with Rust and NATS Jetstream': 'Production HLS Transcoding in Rust',
@@ -205,7 +225,13 @@ const archiveCategories = categories
           <!-- Featured Main Hero Card -->
           {
             featured ? (
-              <div id="featured" class="featured-main-card featured-main-card-no-img" data-category={getPostCategoryKey(featured)}>
+              <a
+                id="featured"
+                href={`/blog/${featured.slug}/`}
+                class="featured-main-card featured-main-card-no-img"
+                data-category={getPostCategoryKeys(featured).join(' ')}
+                aria-label={`Read featured post: ${featured.data.title}`}
+              >
                 <div class="featured-content-wrapper">
                   <div class="featured-top-tag">
                     <span class="pill-tag-new">
@@ -219,7 +245,7 @@ const archiveCategories = categories
                   <div class="featured-category-badge">{featured.data.tags[0] || 'Engineering'}</div>
 
                   <h3 class="featured-title">
-                    <a href={`/blog/${featured.slug}/`}>{featured.data.title}</a>
+                    <span>{featured.data.title}</span>
                   </h3>
 
                   <p class="featured-desc">{featured.data.description}</p>
@@ -227,17 +253,17 @@ const archiveCategories = categories
                   <div class="featured-footer-meta">
                     <span class="read-time">{readingTime(featured.body)} min read</span>
                     <span class="meta-dot">•</span>
-                    <a href={`/blog/${featured.slug}/`} class="read-article-link">Read article →</a>
+                    <span class="read-article-link">Read article →</span>
                   </div>
                 </div>
-              </div>
+              </a>
             ) : null
           }
 
           <!-- All Other Blog Cards Grid (Yellow Borders) Below Big Featured Card -->
           <div class="subcards-grid">
-            {rest.map((post, index) => (
-              <div class:list={['subcard-item', { 'hide-on-phone': index >= 3 }]} data-category={getPostCategoryKey(post)}>
+            {rest.map((post) => (
+              <div class="subcard-item" data-category={getPostCategoryKeys(post).join(' ')}>
                 <span class="subcard-tag">{post.data.tags[0] || 'Article'}</span>
                 <h4 class="subcard-title">
                   <a href={`/blog/${post.slug}/`}>
@@ -394,13 +420,18 @@ const archiveCategories = categories
         // Filter middle feed cards (exact category match: only that category appears!)
         let visibleCount = 0;
         cards.forEach((card) => {
-          const cardCat = (card.getAttribute('data-category') || '').toLowerCase().trim();
+          const rawCats = (card.getAttribute('data-category') || '').toLowerCase().trim();
+          const cardCats = rawCats.split(/\s+/);
+          const isMatch = targetCat === 'all' || cardCats.includes(targetCat);
           
-          if (targetCat === 'all' || cardCat === targetCat) {
+          if (isMatch) {
+            card.classList.remove('card-category-hidden');
+            card.style.removeProperty('display');
             card.style.display = '';
             visibleCount++;
           } else {
-            card.style.display = 'none';
+            card.classList.add('card-category-hidden');
+            card.style.setProperty('display', 'none', 'important');
           }
         });
 

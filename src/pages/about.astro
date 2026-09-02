@@ -7,7 +7,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="OllaNode is a self-hosted, API-first video, CDN, storage, and edge platform written in Rust. Learn about our architecture, capabilities, and ownership-first pricing."
 >
   <div class="wai-about-wrapper">
-    <!-- 1. Breadcrumb Bar (Matching W3C WAI Breadcrumb Pattern) -->
+    <!-- 1. Breadcrumb Bar -->
     <nav class="wai-breadcrumb-bar" aria-label="Breadcrumb">
       <div class="container-wide">
         <ol class="breadcrumb-list">
@@ -18,10 +18,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     </nav>
 
-    <!-- 2. Main Two-Column Layout (W3C WAI Leftcol Structure) -->
+    <!-- 2. Main Two-Column Layout -->
     <div class="container-wide wai-layout-grid">
       
-      <!-- Left Column: Sidenav -->
+      <!-- Left Column: Sticky Sidenav (Desktop) / Horizontal Strip (Mobile) -->
       <aside class="wai-sidenav-col" aria-label="Secondary navigation">
         <nav class="wai-sidenav-sticky">
           <div class="sidenav-header">
@@ -29,16 +29,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
           <ul class="sidenav-menu">
             <li><a href="#overview" class="sidenav-link active">Overview</a></li>
-            <li><a href="#brief" class="sidenav-link">Platform Brief</a></li>
-            <li><a href="#architecture" class="sidenav-link">Clean Architecture</a></li>
-            <li><a href="#capabilities" class="sidenav-link">Product Surfaces</a></li>
-            <li><a href="#pricing" class="sidenav-link">Ownership Pricing</a></li>
-            <li><a href="#faq" class="sidenav-link">Honest Edges (FAQ)</a></li>
+            <li><a href="#brief" class="sidenav-link">Brief</a></li>
+            <li><a href="#architecture" class="sidenav-link">Architecture</a></li>
+            <li><a href="#capabilities" class="sidenav-link">Surfaces</a></li>
+            <li><a href="#pricing" class="sidenav-link">Pricing</a></li>
+            <li><a href="#faq" class="sidenav-link">FAQ</a></li>
           </ul>
 
           <div class="sidenav-cta-box">
-            <div class="cta-box-title">Self-Host Ollanode</div>
-            <p class="cta-box-desc">Apache-2.0 permissive license. No per-minute fees.</p>
+            <div class="cta-box-title">Self-Host OllaNode</div>
+            <p class="cta-box-desc">Apache-2.0 license. Zero per-minute fees.</p>
             <a href="https://login.ollanode.com" target="_blank" rel="noopener noreferrer" class="sidenav-cta-btn">
               Start Free →
             </a>
@@ -46,7 +46,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </nav>
       </aside>
 
-      <!-- Main Column: W3C WAI Content Structure -->
+      <!-- Main Content Column -->
       <main class="wai-main-col" id="main-content">
         
         <!-- Header -->
@@ -55,20 +55,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <h1 class="wai-page-title">About OllaNode</h1>
         </header>
 
-        <!-- W3C WAI Style Callout Box: Essential Mission -->
+        <!-- Mission Callout Box -->
         <aside class="wai-box wai-box-mission" aria-label="Platform Mission">
           <div class="wai-box-inner">
             <p class="mission-text">
-              <strong>One REST API for the whole stack — no per-minute billing, no vendor origin.</strong>
+              <strong>One unified REST API for video, CDN, storage, and edge compute — without per-minute billing.</strong>
             </p>
             <p class="mission-subtext">
-              Upload, transcode, stream, and deliver video at scale on your own infrastructure. Mux / Cloudflare Stream-class — on your own hardware.
+              Upload, transcode, stream, and deliver video on your own infrastructure. Mux and Cloudflare Stream-class performance with full hardware ownership.
             </p>
           </div>
         </aside>
 
-        <!-- W3C WAI Style "Brief" Box: What OllaNode Delivers vs Replaces -->
-        <aside class="wai-box wai-box-full" id="brief" aria-label="Platform Brief">
+        <!-- Brief Box: What OllaNode Delivers vs Eliminates -->
+        <section class="wai-box wai-box-full" id="brief" aria-label="Platform Brief">
           <div class="wai-box-header">
             <h2 class="wai-box-h2">Platform Brief</h2>
           </div>
@@ -77,125 +77,130 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <div class="brief-column">
                 <h3 class="brief-col-heading">OllaNode delivers…</h3>
                 <ul class="brief-checklist">
-                  <li><strong>Self-hosted video pipeline:</strong> Adaptive HLS ladders (360p→4K), thumbnail sprites, and Whisper transcripts.</li>
-                  <li><strong>Full edge network:</strong> Multi-tenant pull zones on OpenResty edge, S3 storage, and Hickory DNS.</li>
-                  <li><strong>Edge isolates:</strong> Lightweight V8 isolates with zero cold container overhead.</li>
+                  <li><strong>Video pipeline:</strong> Dynamic HLS ladders (360p→4K), thumbnail sprites & Whisper transcripts.</li>
+                  <li><strong>Edge CDN & storage:</strong> Multi-tenant pull zones on OpenResty edge, S3 storage, and Hickory DNS.</li>
+                  <li><strong>Edge isolates:</strong> Fast V8 isolate compute with sub-millisecond cold starts.</li>
                 </ul>
               </div>
               <div class="brief-column">
                 <h3 class="brief-col-heading">OllaNode eliminates…</h3>
                 <ul class="brief-crosslist">
-                  <li><strong>Per-minute metering:</strong> No encoding taxes, no per-character speech meters, and no egress surprises.</li>
-                  <li><strong>Vendor origin lock-in:</strong> Playback proxies rewrite HLS URIs so your storage origin never leaks.</li>
-                  <li><strong>Closed proprietary silos:</strong> 100% permissive open source (Apache-2.0, strictly no AGPL).</li>
+                  <li><strong>Per-minute metering:</strong> No encoding taxes, speech transcription meters, or egress markups.</li>
+                  <li><strong>Origin leakage:</strong> Edge playback proxies rewrite URIs so your storage origin is never leaked.</li>
+                  <li><strong>Proprietary silos:</strong> 100% permissive open source (Apache-2.0, zero AGPL code).</li>
                 </ul>
               </div>
             </div>
           </div>
-        </aside>
-
-        <!-- W3C WAI Style "Page Contents" Table of Contents Box -->
-        <nav class="wai-box wai-box-toc" aria-labelledby="toc-heading">
-          <div class="wai-box-header toc-header">
-            <span class="toc-icon">≡</span>
-            <h2 id="toc-heading" class="wai-box-h2">Page Contents</h2>
-          </div>
-          <div class="wai-box-inner">
-            <ul class="toc-list">
-              <li><a href="#architecture">1. Clean Architecture & Rust Engine</a></li>
-              <li><a href="#capabilities">2. Thirteen Product Surfaces Behind One REST API</a></li>
-              <li><a href="#playback-cdn">3. Private Origin Playback & Edge Runtime</a></li>
-              <li><a href="#pricing">4. Ownership-First Pricing (Self-Host & Managed)</a></li>
-              <li><a href="#faq">5. What It Is — And What It Isn't (Honest Edges)</a></li>
-            </ul>
-          </div>
-        </nav>
+        </section>
 
         <!-- Section 1: Clean Architecture -->
         <section class="wai-content-section" id="architecture">
           <h2 class="wai-section-heading">1. Clean Architecture & Rust Engine</h2>
           <p>
-            Structured as a Cargo workspace built in <strong>Rust (Axum)</strong> with 11 library crates and 9 independently-deployable services. Domain core contains no I/O; adapters implement ports.
+            Structured as a modular Cargo workspace built in <strong>Rust (Axum)</strong> with 11 library crates and 9 independently-deployable services:
           </p>
           <ul class="wai-text-list">
-            <li><strong>Worker Engine:</strong> NATS JetStream by default; Temporal optional (shared activity layer).</li>
-            <li><strong>Permissive OSS:</strong> Licensed under <strong>Apache-2.0</strong> with strictly permissive dependencies (no AGPL).</li>
-            <li><strong>Hardware:</strong> Provision ≥ 8 vCPU / 16–32 GB RAM, then run <code>make deploy-up</code>.</li>
+            <li><strong>Worker Engine:</strong> NATS JetStream by default; optional Temporal activity layer.</li>
+            <li><strong>Permissive OSS:</strong> Licensed under <strong>Apache-2.0</strong> with strictly permissive dependencies.</li>
+            <li><strong>Hardware:</strong> Run on any standard Linux VPS with ≥ 8 vCPU and 16 GB RAM.</li>
           </ul>
 
           <div class="code-curl-preview">
             <div class="curl-bar mono">POST /v1/videos</div>
             <pre class="curl-code mono"><code>$ curl -X POST https://api.ollanode.com/v1/videos \
   -H "Authorization: Bearer $KEY" \
-  -d '&#123;"title":"launch.mp4"&#125;'
-
-// 201 Created
-&#123;
-  "id": "vid_8Kd2Qa7Rn0",
-  "status": "created",
-  "master_url": "…/master.m3u8?token=…"
-&#125;</code></pre>
+  -d '&#123;"title":"launch.mp4"&#125;'</code></pre>
           </div>
         </section>
 
         <!-- Section 2: Product Surfaces -->
         <section class="wai-content-section" id="capabilities">
-          <h2 class="wai-section-heading">2. Thirteen Product Surfaces Behind One REST API</h2>
+          <h2 class="wai-section-heading">2. Modular Product Surfaces Behind One REST API</h2>
           <p>
-            Thirteen modular product surfaces — video, voice, delivery, storage, DNS, edge, and governance — all accessible from a single self-hosted control plane:
+            Access video, storage, DNS, edge compute, and AI agent tooling through a unified self-hosted control plane:
           </p>
 
-          <div class="capabilities-table-wrap">
-            <table class="capabilities-table">
-              <thead>
-                <tr>
-                  <th style="width: 25%;">Surface</th>
-                  <th>Core Capability</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Video Pipeline</strong></td>
-                  <td>Adaptive HLS ladders (360p→4K), H.264 & H.265/NVENC, MP4/MP3, and AES-128 encryption.</td>
-                </tr>
-                <tr>
-                  <td><strong>Playback</strong></td>
-                  <td>Signed expiring tokens, private origin proxying, cookie-scoped CDN segments, embeddable player.</td>
-                </tr>
-                <tr>
-                  <td><strong>Thumbnails & ASR</strong></td>
-                  <td>Sampled frames, storyboard sprites, and word-level Whisper transcripts with chapters.</td>
-                </tr>
-                <tr>
-                  <td><strong>Voice Engine</strong></td>
-                  <td>Text translation, natural TTS, and speech-to-text on self-hosted inference with no metering.</td>
-                </tr>
-                <tr>
-                  <td><strong>CDN Pull Zones</strong></td>
-                  <td>Multi-tenant pull zones on OpenResty edge: per-zone TTL/CORS, token signing, purge, and live traffic.</td>
-                </tr>
-                <tr>
-                  <td><strong>Storage & Optimizer</strong></td>
-                  <td>S3-style storage zones with presigned uploads and on-the-fly image optimization via imgproxy.</td>
-                </tr>
-                <tr>
-                  <td><strong>Authoritative DNS</strong></td>
-                  <td>Hickory authoritative DNS serving zones and records (A/AAAA/CNAME/TXT/MX) directly from Postgres.</td>
-                </tr>
-                <tr>
-                  <td><strong>Edge Functions</strong></td>
-                  <td>JS/TS edge compute executed in lightweight V8 isolates with zero cold container overhead.</td>
-                </tr>
-                <tr>
-                  <td><strong>AI-Agent Model</strong></td>
-                  <td>Approval-gated destructive actions, capability mapping, tamper-evident audit log, and kill-switch.</td>
-                </tr>
-                <tr>
-                  <td><strong>Security & WAF</strong></td>
-                  <td>Coraza + OWASP CRS WAF, origin guard, idempotency keys, and rate limiting.</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="surface-cards-grid">
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">Video Pipeline</span>
+              </div>
+              <p class="surface-desc">Adaptive HLS (360p→4K), NVENC acceleration, MP4/MP3 packaging & AES-128 encryption.</p>
+            </div>
+
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">Private Playback</span>
+              </div>
+              <p class="surface-desc">Expiring signed tokens, origin-shield proxying, cookie-scoped CDN segments & embed player.</p>
+            </div>
+
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">Thumbnails & ASR</span>
+              </div>
+              <p class="surface-desc">Storyboard sprites, sampled frames, and word-level Whisper transcripts with chapters.</p>
+            </div>
+
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">Voice Engine</span>
+              </div>
+              <p class="surface-desc">Text translation, natural TTS, and speech-to-text inference with zero per-character metering.</p>
+            </div>
+
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">Edge CDN</span>
+              </div>
+              <p class="surface-desc">Multi-tenant pull zones on OpenResty edge with instant cache purge and token signing.</p>
+            </div>
+
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">Storage & Optimizer</span>
+              </div>
+              <p class="surface-desc">S3-compatible storage zones with presigned uploads and on-the-fly image resizing via imgproxy.</p>
+            </div>
+
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">Authoritative DNS</span>
+              </div>
+              <p class="surface-desc">Hickory authoritative DNS serving zones and records (A/AAAA/CNAME/TXT) directly from Postgres.</p>
+            </div>
+
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">Edge Functions</span>
+              </div>
+              <p class="surface-desc">JavaScript/TypeScript edge compute executed in lightweight V8 isolates with zero cold-start delay.</p>
+            </div>
+
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">AI Governance</span>
+              </div>
+              <p class="surface-desc">Model Context Protocol (MCP) server, approval-gated actions, and tamper-evident audit logs.</p>
+            </div>
+
+            <div class="surface-card">
+              <div class="surface-header">
+                <span class="surface-dot"></span>
+                <span class="surface-badge">Security & WAF</span>
+              </div>
+              <p class="surface-desc">Coraza + OWASP CRS WAF, origin shielding, idempotency protection, and fine-grained rate limits.</p>
+            </div>
           </div>
         </section>
 
@@ -203,21 +208,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <section class="wai-content-section" id="playback-cdn">
           <h2 class="wai-section-heading">3. Private Origin Playback & Edge Runtime</h2>
           <p>
-            <strong>Zero origin leakage:</strong> Bytes are never served direct. The playback-service proxies and rewrites HLS URIs through itself so your storage origin is never exposed.
+            <strong>Zero origin leakage:</strong> Video bytes are never served directly from storage. The playback service rewrites HLS manifest URIs so your storage bucket credentials and endpoints are never exposed.
           </p>
           <ul class="wai-text-list">
-            <li><strong>CDN Pull Zones:</strong> Routed by Host. Instant purge with cache version bump for immediate fresh delivery.</li>
-            <li><strong>Storage Zones:</strong> S3-compatible endpoints with presigned uploads and integrated image optimization.</li>
-            <li><strong>DNS & Edge:</strong> Hickory serves zone records from Postgres; V8 isolates run serverless edge compute.</li>
+            <li><strong>Pull Zones:</strong> Routed by Host header with instantaneous cache purges.</li>
+            <li><strong>Storage Zones:</strong> Standard S3-compatible endpoints with integrated image optimization.</li>
+            <li><strong>DNS & Edge:</strong> Postgres-backed Hickory DNS records and zero-overhead V8 edge isolates.</li>
           </ul>
         </section>
 
-        <!-- Section 4: Ownership-First Pricing (From ollanode.com/pricing) -->
+        <!-- Section 4: Ownership-First Pricing (SIDE BY SIDE ON ALL SCREENS) -->
         <section class="wai-content-section" id="pricing">
           <div class="pricing-banner-header">
-            <h2 class="wai-section-heading" style="margin-bottom: 0.35rem;">4. Ownership-First Pricing</h2>
+            <h2 class="wai-section-heading">4. Ownership-First Pricing</h2>
             <p class="pricing-sublead">
-              No per-minute fees. No egress surprises. You bring the VMs and storage — we bring the platform.
+              No per-minute fees or egress markups. You bring the compute — we bring the platform.
             </p>
           </div>
 
@@ -226,25 +231,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <div class="wai-pricing-card">
               <div class="pricing-card-badge">OPEN SOURCE</div>
               <h3 class="pricing-plan-name">Self-Host</h3>
-              <p class="pricing-plan-tagline">Run the whole stack on your own infrastructure.</p>
+              <p class="pricing-plan-tagline">On your hardware.</p>
               
               <div class="pricing-cost">
                 <span class="cost-figure">$0</span>
-                <span class="cost-unit">/ license cost</span>
+                <span class="cost-unit">/ license</span>
               </div>
 
               <ul class="pricing-features-list">
-                <li><span class="feat-check">✓</span> <span>Full source — Apache-2.0, permissive stack</span></li>
-                <li><span class="feat-check">✓</span> <span>Video pipeline + voice (translate/TTS/ASR)</span></li>
-                <li><span class="feat-check">✓</span> <span>CDN + storage + edge functions</span></li>
-                <li><span class="feat-check">✓</span> <span>Unlimited videos, zones & projects</span></li>
-                <li><span class="feat-check">✓</span> <span>~60 REST endpoints, webhooks, audit log</span></li>
-                <li><span class="feat-check">✓</span> <span>Community support</span></li>
+                <li><span class="feat-check">✓</span> <span>Full source (Apache-2.0)</span></li>
+                <li><span class="feat-check">✓</span> <span>Video pipeline + HLS</span></li>
+                <li><span class="feat-check">✓</span> <span>Edge CDN & S3 storage</span></li>
+                <li><span class="feat-check">✓</span> <span>Unlimited videos</span></li>
+                <li><span class="feat-check">✓</span> <span>REST API & MCP server</span></li>
               </ul>
 
               <div class="pricing-card-footer">
                 <a href="https://login.ollanode.com" target="_blank" rel="noopener noreferrer" class="btn-plan btn-primary">
-                  Open Dashboard
+                  Start Free →
                 </a>
               </div>
             </div>
@@ -253,23 +257,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <div class="wai-pricing-card featured-plan">
               <div class="pricing-card-badge badge-accent">ENTERPRISE</div>
               <h3 class="pricing-plan-name">Managed</h3>
-              <p class="pricing-plan-tagline">We operate it on your cloud, you keep your data.</p>
+              <p class="pricing-plan-tagline">On your cloud.</p>
               
               <div class="pricing-cost">
                 <span class="cost-figure">Custom</span>
-                <span class="cost-unit">/ cloud deployment</span>
+                <span class="cost-unit">/ dedicated</span>
               </div>
 
               <ul class="pricing-features-list">
-                <li><span class="feat-check">✓</span> <span><strong>Everything in Self-host</strong></span></li>
-                <li><span class="feat-check">✓</span> <span>Automated provisioning, upgrades & monitoring</span></li>
+                <li><span class="feat-check">✓</span> <span>Everything in Self-Host</span></li>
+                <li><span class="feat-check">✓</span> <span>Auto upgrades & backups</span></li>
                 <li><span class="feat-check">✓</span> <span>Multi-region edge PoPs</span></li>
-                <li><span class="feat-check">✓</span> <span>Enterprise SLA & priority support</span></li>
-                <li><span class="feat-check">✓</span> <span>Custom compliance & dedicated engineers</span></li>
+                <li><span class="feat-check">✓</span> <span>99.99% SLA & 24/7 support</span></li>
+                <li><span class="feat-check">✓</span> <span>Dedicated engineers</span></li>
               </ul>
 
               <div class="pricing-card-footer">
-                <a href="https://ollanode.com/cdn-cgi/l/email-protection#eb838e878784ab8487878a85848f8ec5888486" class="btn-plan btn-secondary">
+                <a href="https://ollanode.com#contact" target="_blank" rel="noopener noreferrer" class="btn-plan btn-secondary">
                   Contact Sales
                 </a>
               </div>
@@ -278,54 +282,54 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
           <aside class="wai-box-note">
             <p>
-              <strong>Note:</strong> Both tiers are the exact same platform — Managed simply means our team handles operations, provisioning, and uptime SLAs on your cloud infrastructure.
+              <strong>Note:</strong> Both tiers use the exact same open platform — Managed simply means our team handles operations, upgrades, and uptime SLAs on your cloud infrastructure.
             </p>
           </aside>
         </section>
 
-        <!-- Section 5: Honest Edges (FAQ from ollanode.com) -->
+        <!-- Section 5: Honest Edges (FAQ) -->
         <section class="wai-content-section" id="faq">
           <h2 class="wai-section-heading">5. What It Is — And What It Isn't</h2>
-          <p class="faq-subtext">The honest edges, directly from our capability source-of-truth:</p>
+          <p class="faq-subtext">Direct answers to common architecture and capability questions:</p>
 
           <div class="wai-faq-list">
             <div class="faq-item">
               <h3 class="faq-question">Is there live streaming?</h3>
-              <p class="faq-answer">No — it is a VOD (Video on Demand) pipeline only. There is no live or RTMP ingest.</p>
+              <p class="faq-answer">No — OllaNode is an on-demand VOD pipeline only. There is currently no RTMP or live ingest.</p>
             </div>
 
             <div class="faq-item">
               <h3 class="faq-question">HLS or DASH?</h3>
-              <p class="faq-answer">HLS today. Segments are already packaged as CMAF/fMP4 (DASH-ready packaging); a DASH manifest generator is the remaining piece.</p>
+              <p class="faq-answer">HLS today. Segments are formatted in CMAF/fMP4, which is DASH-ready for the upcoming manifest update.</p>
             </div>
 
             <div class="faq-item">
               <h3 class="faq-question">How does pricing work?</h3>
-              <p class="faq-answer">It is self-hosted software you run on your own hardware. There is no billing system and no metered plans — your only cost is your own underlying compute and storage infrastructure.</p>
+              <p class="faq-answer">The software is free and open source. There are no metering systems; your only expense is your own cloud compute and storage.</p>
             </div>
 
             <div class="faq-item">
-              <h3 class="faq-question">What's off by default?</h3>
-              <p class="faq-answer">AI metadata, speaker diarization, H.265/NVENC, loudness normalization, and the SVT-AV1 tier are all real and functional, but config/hardware-gated and turned off by default.</p>
+              <h3 class="faq-question">What is off by default?</h3>
+              <p class="faq-answer">AI diarization, NVENC hardware transcoding, and AV1 encode tiers are fully functional but config-gated and disabled by default.</p>
             </div>
 
             <div class="faq-item">
               <h3 class="faq-question">How is it licensed?</h3>
-              <p class="faq-answer">Apache-2.0, with permissive-OSS-only dependencies (strictly no AGPL) — SeaweedFS, imgproxy, tusd, Coraza, Hickory, and Vidstack.</p>
+              <p class="faq-answer">Apache-2.0, with strictly permissive dependencies (no AGPL code) — SeaweedFS, imgproxy, tusd, and Coraza.</p>
             </div>
 
             <div class="faq-item">
-              <h3 class="faq-question">Where is the API described?</h3>
-              <p class="faq-answer">Machine-readable OpenAPI 3.1 specification at <code>GET /openapi.json</code>, with full Model Context Protocol (MCP) server support for AI agents.</p>
+              <h3 class="faq-question">Where is the API documented?</h3>
+              <p class="faq-answer">Machine-readable OpenAPI 3.1 specification at <code>GET /openapi.json</code>, with full Model Context Protocol (MCP) server support.</p>
             </div>
           </div>
         </section>
 
-        <!-- Final W3C-Style Next Steps Box -->
+        <!-- Final CTA Box -->
         <div class="wai-box wai-box-next">
           <div class="wai-box-inner text-center">
             <h3>Ready to take control of your video infrastructure?</h3>
-            <p>Bring up your infrastructure, migrate, run the gateway, and upload your first video in minutes.</p>
+            <p>Deploy your cluster, run the API gateway, and transcode your first video in minutes.</p>
             <div class="next-btn-row">
               <a href="https://login.ollanode.com" target="_blank" rel="noopener noreferrer" class="btn-plan btn-primary">
                 Get Started Free →
@@ -344,6 +348,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const links = document.querySelectorAll<HTMLAnchorElement>('.sidenav-link');
+      const menu = document.querySelector<HTMLElement>('.sidenav-menu');
       const sections = Array.from(links)
         .map((link) => {
           const id = link.getAttribute('href')?.replace('#', '');
@@ -352,6 +357,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         .filter((el): el is HTMLElement => el !== null);
 
       if (!links.length || !sections.length) return;
+
+      function scrollLinkIntoMenuView(linkEl: HTMLElement) {
+        if (!menu || window.innerWidth > 868) return;
+        const linkLeft = linkEl.offsetLeft;
+        const linkWidth = linkEl.offsetWidth;
+        const menuWidth = menu.clientWidth;
+        menu.scrollTo({
+          left: linkLeft - (menuWidth / 2) + (linkWidth / 2),
+          behavior: 'smooth'
+        });
+      }
 
       links.forEach((link) => {
         link.addEventListener('click', (e) => {
@@ -363,7 +379,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               target.scrollIntoView({ behavior: 'smooth' });
               links.forEach((l) => l.classList.remove('active'));
               link.classList.add('active');
-              link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+              scrollLinkIntoMenuView(link);
             }
           }
         });
@@ -378,9 +394,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 const href = link.getAttribute('href')?.replace('#', '');
                 if (href === id) {
                   link.classList.add('active');
-                  if (window.innerWidth <= 1024) {
-                    link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                  }
+                  scrollLinkIntoMenuView(link);
                 } else {
                   link.classList.remove('active');
                 }
@@ -401,17 +415,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <style>
   /* ----------------------------------------------------
-     W3C WAI Inspired Layout with OllaNode Brand Palette
+     Zero-Overflow Guaranteed Layout Rules
      ---------------------------------------------------- */
   .wai-about-wrapper {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
     background: var(--bg, #f8fafc);
     color: var(--text, #0f172a);
-    min-height: 85vh;
-    padding-bottom: 5rem;
+    min-height: auto;
+    padding-bottom: 1.25rem !important;
+    margin: 0 !important;
+  }
+
+  :global(.site-main) {
+    padding-bottom: 0 !important;
+  }
+
+  :global(.light-footer) {
+    margin-top: 0 !important;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -421,12 +447,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
+  .container-wide {
+    width: 100% !important;
+    max-width: 1140px !important;
+    margin: 0 auto !important;
+    padding: 0 1.25rem !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+  }
+
   /* Breadcrumb Bar */
   .wai-breadcrumb-bar {
     background: #ffffff;
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
     padding: 0.65rem 0;
     font-size: 0.82rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -443,6 +482,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     list-style: none;
     margin: 0;
     padding: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .breadcrumb-list::-webkit-scrollbar {
+    display: none;
   }
 
   .breadcrumb-list li a {
@@ -471,50 +520,60 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
-  /* Smooth Scroll Target Offset for Header & Sticky Nav */
+  /* Target Offset for Smooth Scrolling */
   .wai-page-header,
   .wai-content-section,
   .wai-box[id] {
-    scroll-margin-top: 130px;
+    scroll-margin-top: 100px;
   }
 
-  /* 2-Column Grid Layout */
+  /* 2-Column Responsive Layout */
   .wai-layout-grid {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
-    gap: 2.75rem;
-    padding-top: 2.25rem;
-    align-items: start;
+    gap: 2.5rem;
+    padding-top: 2rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    position: relative;
   }
 
   /* Left Column: Sidenav */
   .wai-sidenav-col {
-    position: sticky;
-    top: 80px;
-    align-self: start;
-    z-index: 30;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .wai-sidenav-sticky {
+    position: -webkit-sticky;
     position: sticky;
-    top: 80px;
+    top: 86px;
+    z-index: 30;
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.08);
-    border-radius: 10px;
-    padding: 1.25rem 1rem;
+    border-radius: 12px;
+    padding: 1.15rem 0.95rem;
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
   }
 
   @media (prefers-color-scheme: dark) {
     .wai-sidenav-sticky {
       background: #111622;
       border-color: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
     }
   }
 
   .sidenav-header {
-    padding-bottom: 0.65rem;
+    padding-bottom: 0.75rem;
     margin-bottom: 0.75rem;
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   }
@@ -528,9 +587,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .sidenav-title {
     font-size: 0.88rem;
     font-weight: 800;
-    color: #ff6600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    color: var(--text, #0f172a);
+    letter-spacing: -0.01em;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .sidenav-title {
+      color: #f8fafc;
+    }
   }
 
   .sidenav-menu {
@@ -539,52 +603,43 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .sidenav-link {
     display: block;
     padding: 0.45rem 0.65rem;
     font-size: 0.82rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--muted, #475467);
     text-decoration: none;
     border-radius: 6px;
     transition: all 0.15s ease;
-  }
-
-  .sidenav-link:hover {
-    color: #ff6600;
-    background: #fff7ed;
+    border-left: 2px solid transparent;
   }
 
   @media (prefers-color-scheme: dark) {
     .sidenav-link {
       color: #94a3b8;
     }
-    .sidenav-link:hover {
-      color: #ff8533;
-      background: rgba(255, 102, 0, 0.12);
-    }
+  }
+
+  .sidenav-link:hover {
+    color: #ff6600;
+    background: rgba(255, 102, 0, 0.06);
   }
 
   .sidenav-link.active {
-    color: #0f172a;
-    background: #f1f5f9;
-    border-left: 3px solid #ff6600;
+    color: #ff6600;
     font-weight: 700;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .sidenav-link.active {
-      color: #f8fafc;
-      background: rgba(255, 255, 255, 0.06);
-      border-left-color: #ff6600;
-    }
+    background: rgba(255, 102, 0, 0.08);
+    border-left-color: #ff6600;
   }
 
   .sidenav-cta-box {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
     padding-top: 1rem;
     border-top: 1px solid rgba(15, 23, 42, 0.08);
   }
@@ -596,7 +651,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .cta-box-title {
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     font-weight: 800;
     color: var(--text, #0f172a);
     margin-bottom: 0.25rem;
@@ -609,36 +664,44 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .cta-box-desc {
-    font-size: 0.72rem;
+    font-size: 0.74rem;
     color: var(--muted, #64748b);
     line-height: 1.4;
-    margin: 0 0 0.65rem;
+    margin: 0 0 0.75rem;
   }
 
   .sidenav-cta-btn {
     display: block;
     text-align: center;
     background: #ff6600;
-    color: #ffffff;
-    font-size: 0.75rem;
+    color: #ffffff !important;
+    font-size: 0.78rem;
     font-weight: 700;
-    padding: 0.4rem 0.65rem;
+    padding: 0.45rem 0.75rem;
     border-radius: 6px;
     text-decoration: none;
     transition: background 0.15s ease;
   }
 
   .sidenav-cta-btn:hover {
-    background: #ea580c;
+    background: #e65100;
   }
 
-  /* Main Content Area */
+  /* Main Column */
   .wai-main-col {
-    min-width: 0;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
   }
 
   .wai-page-header {
     margin-bottom: 1.5rem;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .header-eyebrow {
@@ -651,11 +714,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .wai-page-title {
-    font-size: 2.25rem;
+    font-size: 2.15rem;
     font-weight: 850;
     letter-spacing: -0.025em;
     color: var(--text, #0f172a);
     margin: 0;
+    line-height: 1.2;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -664,14 +729,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
-  /* W3C WAI Style Callout Boxes */
+  /* Callout Boxes */
   .wai-box {
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.08);
-    border-radius: 10px;
+    border-radius: 12px;
     margin-bottom: 1.75rem;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -684,9 +752,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   .wai-box-inner {
     padding: 1.25rem 1.4rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
   }
 
-  /* Mission Box */
   .wai-box-mission {
     border-left: 4px solid #ff6600;
     background: #fffdfa;
@@ -699,10 +770,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .mission-text {
-    font-size: 1.08rem;
+    font-size: 1.05rem;
     color: var(--text, #0f172a);
     margin: 0 0 0.35rem;
-    line-height: 1.45;
+    line-height: 1.5;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -714,22 +786,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .mission-subtext {
     font-size: 0.86rem;
     color: var(--muted, #64748b);
-    line-height: 1.5;
+    line-height: 1.55;
     margin: 0;
+    word-break: break-word;
   }
 
-  /* Brief Box */
   .wai-box-full {
-    border-top: 3px solid #0284c7; /* Home page blue accent */
+    border-top: 3px solid #0284c7;
   }
 
   .wai-box-header {
     background: #f8fafc;
-    padding: 0.65rem 1.4rem;
+    padding: 0.7rem 1.4rem;
     border-bottom: 1px solid rgba(15, 23, 42, 0.06);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -740,10 +811,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .wai-box-h2 {
-    font-size: 0.96rem;
-    font-weight: 800;
-    color: #0f172a;
     margin: 0;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text, #0f172a);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -756,13 +827,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.75rem;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .brief-col-heading {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 800;
-    color: #ff6600;
     margin: 0 0 0.65rem;
+    color: var(--text, #0f172a);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .brief-col-heading {
+      color: #f8fafc;
+    }
   }
 
   .brief-checklist,
@@ -772,14 +852,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: 0.6rem;
     font-size: 0.82rem;
-    line-height: 1.45;
+    line-height: 1.48;
+    color: var(--muted, #475467);
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .brief-checklist,
+    .brief-crosslist {
+      color: #cbd5e1;
+    }
   }
 
   .brief-checklist li {
-    padding-left: 1.25rem;
+    padding-left: 1.3rem;
     position: relative;
+    word-break: break-word;
   }
 
   .brief-checklist li::before {
@@ -791,8 +882,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .brief-crosslist li {
-    padding-left: 1.25rem;
+    padding-left: 1.3rem;
     position: relative;
+    word-break: break-word;
   }
 
   .brief-crosslist li::before {
@@ -803,65 +895,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-weight: 900;
   }
 
-  /* Table of Contents Box */
-  .wai-box-toc {
-    background: #f1f5f9;
-    border: 1px solid #d4e5f5;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .wai-box-toc {
-      background: #111622;
-      border-color: rgba(56, 189, 248, 0.25);
-    }
-  }
-
-  .toc-header {
-    background: transparent;
-    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
-    padding: 0.55rem 1.4rem;
-  }
-
-  .toc-icon {
-    color: #0284c7;
-    font-weight: 900;
-  }
-
-  .toc-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.45rem 1.5rem;
-  }
-
-  .toc-list li a {
-    color: #0284c7;
-    font-size: 0.82rem;
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .toc-list li a:hover {
-    color: #ff6600;
-    text-decoration: underline;
-  }
-
   /* Content Sections */
   .wai-content-section {
     margin-bottom: 2.75rem;
-    scroll-margin-top: 5rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
   }
 
   .wai-section-heading {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 800;
     letter-spacing: -0.02em;
     color: var(--text, #0f172a);
-    margin: 0 0 0.85rem;
+    margin: 0 0 0.75rem;
     padding-bottom: 0.45rem;
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -876,6 +927,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     line-height: 1.6;
     color: var(--muted, #334155);
     margin: 0 0 0.85rem;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -887,9 +939,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .wai-text-list {
     margin: 0 0 1.25rem 1.25rem;
     padding: 0;
-    font-size: 0.86rem;
+    font-size: 0.85rem;
     line-height: 1.55;
     color: var(--muted, #334155);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -899,22 +956,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .wai-text-list li {
-    margin-bottom: 0.4rem;
+    word-break: break-word;
   }
 
   /* Code curl preview */
   .code-curl-preview {
     background: #0f172a;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
     margin: 1.25rem 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
   }
 
   .curl-bar {
     background: #1e293b;
     color: #94a3b8;
     font-size: 0.72rem;
-    padding: 0.35rem 0.85rem;
+    padding: 0.4rem 0.85rem;
     font-weight: 700;
   }
 
@@ -922,98 +983,128 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin: 0;
     padding: 0.85rem;
     color: #38bdf8;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     line-height: 1.45;
-    white-space: pre-wrap;
-    word-break: break-word;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
     overflow-x: auto;
+    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
   }
 
-  /* Capabilities Table */
-  .capabilities-table-wrap {
-    overflow-x: auto;
-    margin: 1rem 0 1.5rem;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    border-radius: 8px;
+  /* Modern Surface Cards */
+  .surface-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin: 1.25rem 0 1.75rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+  }
+
+  .surface-card {
     background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-left: 3.5px solid #ff6600;
+    border-radius: 12px;
+    padding: 0.85rem 1.05rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    box-sizing: border-box;
+    min-width: 0 !important;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
-    .capabilities-table-wrap {
+    .surface-card {
       background: #111622;
       border-color: rgba(255, 255, 255, 0.08);
+      border-left-color: #ff6600;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
     }
   }
 
-  .capabilities-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.82rem;
-    text-align: left;
+  .surface-header {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
   }
 
-  .capabilities-table th {
-    background: #f8fafc;
-    padding: 0.65rem 0.95rem;
+  .surface-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: #ff6600;
+    flex-shrink: 0;
+  }
+
+  .surface-badge {
+    font-size: 0.88rem;
     font-weight: 800;
     color: var(--text, #0f172a);
-    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    letter-spacing: -0.01em;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
-    .capabilities-table th {
-      background: rgba(255, 255, 255, 0.04);
+    .surface-badge {
       color: #f8fafc;
-      border-bottom-color: rgba(255, 255, 255, 0.08);
     }
   }
 
-  .capabilities-table td {
-    padding: 0.65rem 0.95rem;
-    border-bottom: 1px solid rgba(15, 23, 42, 0.05);
-    color: var(--muted, #475467);
-    line-height: 1.45;
+  .surface-desc {
+    font-size: 0.8rem !important;
+    line-height: 1.45 !important;
+    color: var(--muted, #475467) !important;
+    margin: 0 !important;
+    word-break: break-word;
   }
 
-  @media (prefers-color-scheme: dark) {
-    .capabilities-table td {
-      border-bottom-color: rgba(255, 255, 255, 0.05);
-      color: #cbd5e1;
-    }
-  }
-
-  .capabilities-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  /* Pricing Grid (from ollanode.com/pricing) */
+  /* Pricing Section: SIDE BY SIDE ON ALL SCREENS */
   .pricing-banner-header {
     margin-bottom: 1.25rem;
+    width: 100%;
+    min-width: 0;
   }
 
   .pricing-sublead {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--muted, #64748b);
     margin: 0;
+    word-break: break-word;
   }
 
   .wai-pricing-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.1rem;
     margin-bottom: 1.25rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
   }
 
   .wai-pricing-card {
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.08);
     border-top: 3.5px solid #ff6600;
-    border-radius: 10px;
-    padding: 1.35rem 1.4rem;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    border-radius: 12px;
+    padding: 1.25rem 1.15rem;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
     display: flex;
     flex-direction: column;
-    position: relative;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1032,26 +1123,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .pricing-card-badge {
     display: inline-block;
     align-self: flex-start;
-    font-size: 0.68rem;
+    font-size: 0.62rem;
     font-weight: 800;
-    padding: 2px 7px;
+    padding: 2px 6px;
     border-radius: 9999px;
     background: #fff7ed;
     color: #ea580c;
-    margin-bottom: 0.55rem;
     letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
   }
 
-  .pricing-card-badge.badge-accent {
-    background: #e0f2fe;
+  .badge-accent {
+    background: #f0f9ff;
     color: #0284c7;
   }
 
   .pricing-plan-name {
-    font-size: 1.3rem;
-    font-weight: 850;
+    font-size: 1.15rem;
+    font-weight: 800;
     color: var(--text, #0f172a);
-    margin: 0 0 0.25rem;
+    margin: 0 0 0.2rem;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1061,31 +1154,34 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .pricing-plan-tagline {
-    font-size: 0.8rem;
+    font-size: 0.74rem;
     color: var(--muted, #64748b);
-    margin: 0 0 0.85rem;
-    line-height: 1.4;
+    margin: 0 0 0.65rem;
+    word-break: break-word;
   }
 
   .pricing-cost {
     display: flex;
     align-items: baseline;
-    gap: 6px;
-    padding-bottom: 0.85rem;
-    margin-bottom: 0.85rem;
+    gap: 4px;
+    padding-bottom: 0.65rem;
+    margin-bottom: 0.65rem;
     border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    flex-wrap: wrap;
+    min-width: 0;
   }
 
   @media (prefers-color-scheme: dark) {
     .pricing-cost {
-      border-bottom-color: rgba(255, 255, 255, 0.08);
+      border-bottom-color: rgba(255, 255, 255, 0.06);
     }
   }
 
   .cost-figure {
-    font-size: 2rem;
-    font-weight: 850;
+    font-size: 1.55rem;
+    font-weight: 900;
     color: var(--text, #0f172a);
+    line-height: 1;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1095,20 +1191,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .cost-unit {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--muted, #64748b);
   }
 
   .pricing-features-list {
     list-style: none;
-    margin: 0 0 1.25rem;
+    margin: 0 0 1rem;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    font-size: 0.82rem;
-    color: var(--text, #1e293b);
-    flex-grow: 1;
+    gap: 0.4rem;
+    font-size: 0.76rem;
+    color: var(--muted, #475467);
+    min-width: 0;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1117,103 +1213,128 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
   }
 
+  .pricing-features-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
   .feat-check {
     color: #16a34a;
     font-weight: 900;
-    margin-right: 6px;
+    flex-shrink: 0;
   }
 
   .pricing-card-footer {
     margin-top: auto;
+    width: 100%;
+    min-width: 0;
   }
 
   .btn-plan {
     display: block;
     text-align: center;
-    padding: 0.55rem 1rem;
-    font-size: 0.84rem;
+    padding: 0.55rem 0.65rem;
+    font-size: 0.8rem;
     font-weight: 700;
-    border-radius: 7px;
+    border-radius: 8px;
     text-decoration: none;
-    transition: all 0.16s ease;
+    transition: all 0.15s ease;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .btn-primary {
     background: #ff6600;
-    color: #ffffff;
+    color: #ffffff !important;
   }
 
   .btn-primary:hover {
-    background: #ea580c;
-    color: #ffffff;
+    background: #e65100;
   }
 
   .btn-secondary {
-    background: #0284c7;
-    color: #ffffff;
+    background: #f1f5f9;
+    color: var(--text, #0f172a) !important;
+    border: 1px solid rgba(15, 23, 42, 0.12);
   }
 
   .btn-secondary:hover {
-    background: #0369a1;
-    color: #ffffff;
+    background: #e2e8f0;
   }
 
   .btn-ghost {
     background: transparent;
-    color: var(--text, #0f172a);
-    border: 1px solid rgba(15, 23, 42, 0.15);
+    color: #0284c7 !important;
+    border: 1px solid rgba(2, 132, 199, 0.4);
   }
 
   .btn-ghost:hover {
-    border-color: #ff6600;
-    color: #ff6600;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .btn-ghost {
-      color: #cbd5e1;
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-    .btn-ghost:hover {
-      border-color: #ff8533;
-      color: #ff8533;
-    }
+    background: rgba(2, 132, 199, 0.08);
   }
 
   .wai-box-note {
     background: #f8fafc;
-    border-left: 3px solid #64748b;
-    padding: 0.75rem 1rem;
+    border: 1px dashed rgba(15, 23, 42, 0.15);
+    border-radius: 10px;
+    padding: 0.85rem 1.15rem;
     font-size: 0.82rem;
-    color: var(--muted, #475467);
-    border-radius: 4px;
+    line-height: 1.5;
+    color: var(--muted, #64748b);
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
     .wai-box-note {
-      background: rgba(255, 255, 255, 0.04);
+      background: #111622;
+      border-color: rgba(255, 255, 255, 0.15);
       color: #94a3b8;
     }
   }
 
-  /* FAQ List */
-  .wai-faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  .wai-box-note p {
+    margin: 0;
   }
 
+  /* FAQ List */
   .faq-subtext {
     font-size: 0.86rem;
     color: var(--muted, #64748b);
-    margin-bottom: 1rem;
+    margin: 0 0 1rem;
+    word-break: break-word;
+  }
+
+  .wai-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
   }
 
   .faq-item {
     background: #ffffff;
     border: 1px solid rgba(15, 23, 42, 0.08);
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 0.95rem 1.15rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1228,6 +1349,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-weight: 800;
     color: var(--text, #0f172a);
     margin: 0 0 0.35rem;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1237,40 +1359,47 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .faq-answer {
-    font-size: 0.84rem;
+    font-size: 0.82rem;
+    line-height: 1.55;
     color: var(--muted, #475467);
-    line-height: 1.45;
     margin: 0;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
     .faq-answer {
-      color: #94a3b8;
+      color: #cbd5e1;
     }
   }
 
-  /* Text Center & Next Steps CTA Box */
-  .text-center {
-    text-align: center;
-  }
-
+  /* Next Steps Banner */
   .wai-box-next {
-    border-top: 3.5px solid #ff6600;
-    background: linear-gradient(180deg, rgba(255, 102, 0, 0.04) 0%, #ffffff 100%);
-    margin-top: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0 !important;
+    text-align: center;
+    background: linear-gradient(180deg, #ffffff 0%, #fffbf8 100%);
+    border: 1.5px solid rgba(255, 102, 0, 0.2);
+    border-radius: 14px;
+    padding: 1.75rem 1.25rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
   }
 
   @media (prefers-color-scheme: dark) {
     .wai-box-next {
-      background: linear-gradient(180deg, rgba(255, 102, 0, 0.08) 0%, #111622 100%);
+      background: linear-gradient(180deg, #151922 0%, #171412 100%);
+      border-color: rgba(255, 102, 0, 0.3);
     }
   }
 
   .wai-box-next h3 {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     font-weight: 800;
     color: var(--text, #0f172a);
     margin: 0 0 0.5rem;
+    word-break: break-word;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1280,11 +1409,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .wai-box-next p {
-    font-size: 0.86rem;
+    font-size: 0.85rem;
     color: var(--muted, #64748b);
-    max-width: 520px;
+    max-width: 500px;
     margin: 0 auto 1.25rem;
     line-height: 1.5;
+    word-break: break-word;
   }
 
   .next-btn-row {
@@ -1293,35 +1423,51 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     justify-content: center;
     gap: 0.85rem;
     flex-wrap: wrap;
+    width: 100%;
+    min-width: 0;
   }
 
   /* ----------------------------------------------------
-     1. Tablet Responsive Layout (768px to 1024px)
+     Tablet & Mobile Responsive Breakpoints (<= 868px)
      ---------------------------------------------------- */
-  @media (min-width: 768px) and (max-width: 1024px) {
-    .wai-about-wrapper {
-      padding-bottom: 4rem;
+  @media (max-width: 868px) {
+    .container-wide {
+      padding-left: 0.85rem !important;
+      padding-right: 0.85rem !important;
     }
 
     .wai-layout-grid {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 1.5rem;
-      padding-top: 1.25rem;
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+      padding-top: 0.75rem !important;
     }
 
-    /* Sticky Horizontal Navigation Strip below Header */
+    /* Reset sidebar to sticky horizontal strip */
+    .wai-sidenav-col {
+      position: static !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      margin: 0 !important;
+      z-index: 45;
+    }
+
     .wai-sidenav-sticky {
       position: sticky;
-      top: 66px;
+      top: 56px;
       z-index: 45;
+      padding: 0.4rem 0.5rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
       background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 12px;
-      padding: 0.5rem 0.75rem;
       box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-      margin-bottom: 1.25rem;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -1334,18 +1480,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     .sidenav-header,
     .sidenav-cta-box {
-      display: none;
+      display: none !important;
     }
 
     .sidenav-menu {
-      display: flex;
-      flex-direction: row;
-      overflow-x: auto;
-      white-space: nowrap;
+      flex-direction: row !important;
+      overflow-x: auto !important;
+      white-space: nowrap !important;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      gap: 8px;
+      gap: 6px;
       padding: 2px 0;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
     }
 
     .sidenav-menu::-webkit-scrollbar {
@@ -1353,8 +1502,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     .sidenav-link {
-      padding: 0.38rem 0.85rem;
-      font-size: 0.78rem;
+      padding: 0.32rem 0.72rem;
+      font-size: 0.74rem;
       font-weight: 600;
       background: #f1f5f9;
       color: var(--muted, #475467);
@@ -1376,493 +1525,106 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       color: #ffffff !important;
     }
 
-    /* Tablet Typography & Spacing */
     .wai-page-title {
-      font-size: 1.75rem;
-    }
-
-    .wai-section-heading {
-      font-size: 1.25rem;
-    }
-
-    .mission-text {
-      font-size: 1rem;
-    }
-
-    .mission-subtext {
-      font-size: 0.82rem;
+      font-size: 1.6rem;
     }
 
     .brief-columns {
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
+      grid-template-columns: 1fr !important;
+      gap: 1.15rem;
     }
 
-    .toc-list {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem 1.25rem;
+    .surface-cards-grid {
+      grid-template-columns: 1fr !important;
+      gap: 0.65rem;
     }
 
+    /* BOTH PRICING CARDS STAY SIDE BY SIDE */
     .wai-pricing-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-    }
-
-    .capabilities-table {
-      min-width: 540px;
-    }
-  }
-
-  /* ----------------------------------------------------
-     2. Mobile / Phone Responsive Layout (<= 767px)
-     ---------------------------------------------------- */
-  @media (max-width: 767px) {
-    .wai-about-wrapper {
-      padding-bottom: 3rem;
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 0.55rem !important;
       width: 100% !important;
       max-width: 100% !important;
-      overflow-x: hidden !important;
-    }
-
-    .container-wide {
-      padding-left: 0.65rem !important;
-      padding-right: 0.65rem !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      overflow-x: hidden !important;
-    }
-
-    .wai-breadcrumb-bar {
-      padding: 0.4rem 0;
-      font-size: 0.72rem;
-      width: 100% !important;
-      max-width: 100% !important;
-      overflow-x: hidden !important;
-    }
-
-    .breadcrumb-list {
-      gap: 5px;
-      overflow-x: auto;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      max-width: 100%;
-    }
-
-    .breadcrumb-list::-webkit-scrollbar {
-      display: none;
-    }
-
-    .wai-layout-grid {
-      grid-template-columns: minmax(0, 1fr) !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      gap: 1rem;
-      padding-top: 0.85rem;
-      overflow-x: hidden !important;
-      box-sizing: border-box !important;
-    }
-
-    .wai-main-col {
       min-width: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      overflow-x: hidden !important;
-      box-sizing: border-box !important;
-    }
-
-    /* Sticky Horizontal Navigation Bar */
-    .wai-sidenav-sticky {
-      position: sticky;
-      top: 58px;
-      z-index: 45;
-      padding: 0.35rem 0.5rem;
-      border-radius: 10px;
-      margin-bottom: 0.75rem;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      overflow: hidden !important;
-    }
-
-    .sidenav-menu {
-      display: flex !important;
-      flex-direction: row !important;
-      gap: 6px;
-      overflow-x: auto !important;
-      white-space: nowrap !important;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      max-width: 100% !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-
-    .sidenav-link {
-      padding: 0.3rem 0.65rem;
-      font-size: 0.7rem;
-      flex-shrink: 0;
-    }
-
-    .wai-page-header {
-      margin-bottom: 0.85rem;
-    }
-
-    .header-eyebrow {
-      font-size: 0.62rem;
-    }
-
-    .wai-page-title {
-      font-size: 1.35rem;
-      line-height: 1.22;
-    }
-
-    .wai-box {
-      margin-bottom: 1rem;
-      border-radius: 8px;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      overflow: hidden !important;
-    }
-
-    .wai-box-inner {
-      padding: 0.85rem 0.85rem;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      word-break: break-word !important;
-      overflow-wrap: break-word !important;
-    }
-
-    .wai-box-header {
-      padding: 0.5rem 0.85rem;
-    }
-
-    .wai-box-h2 {
-      font-size: 0.86rem;
-    }
-
-    .mission-text {
-      font-size: 0.88rem;
-      line-height: 1.38;
-    }
-
-    .mission-subtext {
-      font-size: 0.76rem;
-      line-height: 1.4;
-    }
-
-    /* Stacking Brief Columns on Phone */
-    .brief-columns {
-      grid-template-columns: minmax(0, 1fr) !important;
-      gap: 1rem;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-
-    .brief-col-heading {
-      font-size: 0.82rem;
-      margin-bottom: 0.45rem;
-    }
-
-    .brief-checklist,
-    .brief-crosslist {
-      font-size: 0.75rem;
-      gap: 0.5rem;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-
-    .brief-checklist li,
-    .brief-crosslist li {
-      padding-left: 1.1rem;
-      word-break: break-word !important;
-      overflow-wrap: break-word !important;
-    }
-
-    /* Hide redundant duplicate Table of Contents on Mobile */
-    .wai-box-toc {
-      display: none !important;
-    }
-
-    /* Content sections on Phone */
-    .wai-content-section {
-      margin-bottom: 1.75rem;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      overflow-x: hidden !important;
-    }
-
-    .wai-section-heading {
-      font-size: 1.1rem;
-      margin-bottom: 0.55rem;
-      padding-bottom: 0.3rem;
-      word-break: break-word !important;
-    }
-
-    .wai-content-section p {
-      font-size: 0.8rem;
-      line-height: 1.48;
-      margin-bottom: 0.55rem;
-      word-break: break-word !important;
-      overflow-wrap: break-word !important;
-    }
-
-    .wai-text-list {
-      font-size: 0.78rem;
-      line-height: 1.45;
-      margin-left: 1rem;
-      margin-bottom: 0.85rem;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-    }
-
-    .wai-text-list li {
-      word-break: break-word !important;
-      overflow-wrap: break-word !important;
-    }
-
-    .code-curl-preview {
-      margin: 0.85rem 0;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      overflow: hidden !important;
-    }
-
-    .curl-bar {
-      font-size: 0.66rem;
-      padding: 0.3rem 0.65rem;
-    }
-
-    .curl-code {
-      font-size: 0.72rem !important;
-      padding: 0.65rem !important;
-      white-space: pre-wrap !important;
-      word-break: break-all !important;
-      overflow-wrap: anywhere !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-    }
-
-    /* Transform Capabilities Table into Clean Readable Cards on Mobile */
-    .capabilities-table-wrap {
-      border: none !important;
-      background: transparent !important;
-      margin: 0.75rem 0 1rem !important;
-      overflow: visible !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-    }
-
-    .capabilities-table {
-      min-width: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      display: block !important;
-      box-sizing: border-box !important;
-    }
-
-    .capabilities-table tbody {
-      display: block !important;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-
-    .capabilities-table thead {
-      display: none !important;
-    }
-
-    .capabilities-table tr {
-      display: block !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      padding: 0.75rem 0.85rem !important;
-      border: 1px solid rgba(15, 23, 42, 0.08) !important;
-      border-radius: 9px !important;
-      background: #ffffff !important;
-      margin-bottom: 0.55rem !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .capabilities-table tr {
-        background: #111622 !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
-      }
-    }
-
-    .capabilities-table td {
-      display: block !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      border-bottom: none !important;
-      word-break: break-word !important;
-      overflow-wrap: break-word !important;
-    }
-
-    .capabilities-table td:first-child {
-      font-size: 0.86rem !important;
-      font-weight: 800 !important;
-      color: #ff6600 !important;
-      padding: 0 0 0.25rem 0 !important;
-    }
-
-    .capabilities-table td:last-child {
-      font-size: 0.76rem !important;
-      line-height: 1.42 !important;
-      color: var(--muted, #475467) !important;
-      padding: 0 !important;
-    }
-
-    /* Stacking Pricing Cards on Mobile */
-    .wai-pricing-grid {
-      grid-template-columns: minmax(0, 1fr) !important;
-      gap: 1rem !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
     }
 
     .wai-pricing-card {
-      padding: 1rem 1rem !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      word-break: break-word !important;
+      padding: 0.95rem 0.75rem !important;
     }
 
     .pricing-plan-name {
-      font-size: 1.15rem;
-    }
-
-    .pricing-plan-tagline {
-      font-size: 0.74rem;
-      margin-bottom: 0.55rem;
-    }
-
-    .pricing-cost {
-      padding-bottom: 0.55rem;
-      margin-bottom: 0.55rem;
-      flex-wrap: wrap;
+      font-size: 1rem !important;
     }
 
     .cost-figure {
-      font-size: 1.55rem;
-    }
-
-    .cost-unit {
-      font-size: 0.72rem;
+      font-size: 1.35rem !important;
     }
 
     .pricing-features-list {
-      font-size: 0.76rem;
-      gap: 0.35rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .pricing-features-list li {
-      word-break: break-word !important;
-      overflow-wrap: break-word !important;
+      font-size: 0.72rem !important;
+      gap: 0.3rem !important;
+      margin-bottom: 0.75rem !important;
     }
 
     .btn-plan {
-      font-size: 0.8rem;
-      padding: 0.5rem 0.85rem;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-
-    .wai-box-note {
-      padding: 0.6rem 0.75rem;
-      font-size: 0.74rem;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      word-break: break-word !important;
-    }
-
-    /* FAQ List on Mobile */
-    .faq-item {
-      padding: 0.7rem 0.8rem;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      word-break: break-word !important;
-    }
-
-    .faq-question {
-      font-size: 0.82rem;
-    }
-
-    .faq-answer {
-      font-size: 0.76rem;
-      line-height: 1.42;
-      word-break: break-word !important;
-      overflow-wrap: break-word !important;
-    }
-
-    /* Next Steps Box on Mobile */
-    .wai-box-next {
-      margin-top: 1.5rem;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-    }
-
-    .wai-box-next h3 {
-      font-size: 1.1rem;
-    }
-
-    .wai-box-next p {
-      font-size: 0.78rem;
-      line-height: 1.42;
-      margin-bottom: 1rem;
+      font-size: 0.74rem !important;
+      padding: 0.45rem 0.4rem !important;
     }
 
     .next-btn-row {
-      flex-direction: column !important;
-      width: 100% !important;
-      gap: 0.55rem;
+      flex-direction: column;
+      width: 100%;
     }
 
     .next-btn-row .btn-plan {
-      width: 100% !important;
-      box-sizing: border-box !important;
+      width: 100%;
     }
   }
 
-  /* ----------------------------------------------------
-     3. Small Phone Breakpoint (<= 480px)
-     ---------------------------------------------------- */
+  /* Extra Small Phone Breakpoint (<= 480px) */
   @media (max-width: 480px) {
     .container-wide {
-      padding-left: 0.5rem !important;
-      padding-right: 0.5rem !important;
+      padding-left: 0.65rem !important;
+      padding-right: 0.65rem !important;
     }
 
     .wai-page-title {
-      font-size: 1.25rem;
+      font-size: 1.4rem;
     }
 
     .wai-section-heading {
-      font-size: 1rem;
+      font-size: 1.12rem;
     }
 
     .wai-box-inner {
-      padding: 0.75rem 0.75rem;
+      padding: 1rem 0.85rem;
+    }
+
+    /* Still side by side on small phone */
+    .wai-pricing-grid {
+      gap: 0.4rem !important;
     }
 
     .wai-pricing-card {
-      padding: 0.85rem 0.85rem;
+      padding: 0.8rem 0.55rem !important;
+    }
+
+    .pricing-plan-name {
+      font-size: 0.92rem !important;
+    }
+
+    .cost-figure {
+      font-size: 1.22rem !important;
+    }
+
+    .pricing-features-list {
+      font-size: 0.68rem !important;
+    }
+
+    .btn-plan {
+      font-size: 0.72rem !important;
+      padding: 0.42rem 0.35rem !important;
     }
   }
 </style>
