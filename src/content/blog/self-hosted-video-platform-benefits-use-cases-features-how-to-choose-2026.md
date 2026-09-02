@@ -12,7 +12,7 @@ Every product team that ships video eventually hits the same fork. Keep paying a
 
 That choice used to feel extreme. In 2026 it is a normal architecture decision. Teams that care about data residency, predictable cost, private playback, and API-level control are done stitching five vendors together by hand. They want one platform that covers ingest, transcoding, HLS delivery, storage, CDN, and the control plane that ties those pieces together.
 
-This guide is the practical version of that evaluation. It explains what a self-hosted video platform actually is, when it is the right move, which features matter once real viewers depend on you, and how to choose one without getting trapped by marketing checklists. Where concrete examples help, we use Ollanode as a reference — an Apache-2.0, VOD-focused stack with adaptive HLS, signed playback, S3-compatible storage, pull-zone CDN, edge functions, and an OpenAPI control plane. This is not a product launch post and not a billing rant. It is a buying and architecture guide for people who have already outgrown “upload and hope.”
+This guide is the practical version of that evaluation. It explains what a self-hosted video platform actually is, when it is the right move, which features matter once real viewers depend on you, and how to choose one without getting trapped by marketing checklists. Where concrete examples help, we use [Ollanode](https://ollanode.com) as a reference — an Apache-2.0, VOD-focused stack with adaptive HLS, signed playback, S3-compatible storage, pull-zone CDN, edge functions, and an OpenAPI control plane. This is not a product launch post and not a billing rant. It is a buying and architecture guide for people who have already outgrown “upload and hope.”
 
 ---
 
@@ -99,7 +99,7 @@ That arc is why “self-hosted video platform” became a category search. Buyer
 Strong platforms separate concerns the same way mature cloud services do. Requests flow from users, apps, or agents through a REST/OpenAPI gateway into a control plane that handles auth, policy, jobs, and webhooks. From there, work fans out to storage and to async workers that validate, transcode, package HLS, and generate thumbnails and transcripts. Outputs are served through a playback origin and CDN edge to viewers.
 
 ### Control plane
-This is the brain: API keys and scopes, project tenancy, asset records, playback policy, job dispatch, webhook fan-out, audit. In Ollanode terms, this is the Rust/Axum API and orchestration layer backed by PostgreSQL and NATS JetStream, with optional Temporal for durable workflows.
+This is the brain: API keys and scopes, project tenancy, asset records, playback policy, job dispatch, webhook fan-out, audit. In Ollanode terms, this is the [Rust/Axum API and orchestration layer](https://ollanode.com/docs/architecture) backed by PostgreSQL and NATS JetStream, with optional Temporal for durable workflows.
 
 ### Processing plane
 Long-running work never blocks the HTTP request. Workers validate media, extract metadata, build adaptive ladders, package HLS, generate posters/storyboards, run speech-to-text when enabled, and store outputs. API latency stays predictable while encode capacity scales independently.
@@ -127,7 +127,7 @@ Clients upload through one of several paths:
 | **Resumable TUS** | Browser uploads / flaky networks |
 | **Pull-from-URL** | Importing existing remote media |
 
-Create-time controls usually include playback policy (signed vs public), quality preset, max height, encryption flags, and access rules.
+Create-time controls usually include [playback policy (signed vs public)](https://ollanode.com/docs/playback), quality preset, max height, encryption flags, and access rules.
 
 ### Pipeline stages (reference model)
 
@@ -143,7 +143,7 @@ Once upload completes, workers typically run:
 8. **emit_webhook** — HMAC-signed events to your systems
 9. **mark_ready** — asset becomes playable
 
-Ollanode follows this pattern closely: async worker pools, source-aware ladders with no upscaling, H.264 by default with optional H.265/NVENC and SVT-AV1 tiers, CMAF/fMP4 for non-encrypted HLS, and MPEG-TS when AES-128 encryption is enabled.
+Ollanode follows this pattern closely: async worker pools, [source-aware ladders with no upscaling](https://ollanode.com/docs/pipeline), H.264 by default with optional H.265/NVENC and SVT-AV1 tiers, CMAF/fMP4 for non-encrypted HLS, and MPEG-TS when AES-128 encryption is enabled.
 
 ### Why async matters
 Encoding a 4K source into multiple renditions can take minutes. If that work happens inside the upload request, your API becomes a denial-of-service magnet and your UX becomes a spinner. Platforms that understand production keep the request path thin and the worker path observable.
@@ -163,25 +163,25 @@ Use this as a bill-of-materials when evaluating any self-hosted option.
    Signed URLs/tokens, embeddable player or clean HLS URLs for your player, subtitle/chapter/storyboard sidecars.
 
 4. **Storage**  
-   S3-compatible zones for originals and derivatives, lifecycle/quota controls, optional image optimizer for posters and UI assets.
+   [S3-compatible zones](https://ollanode.com/docs/storage) for originals and derivatives, lifecycle/quota controls, optional image optimizer for posters and UI assets.
 
 5. **CDN / edge**  
-   Hostname → origin or storage mapping, TTLs, CORS, cache bypass, purge (full and path), hit/miss analytics, hotlink tokens.
+   Hostname → origin or storage mapping, TTLs, CORS, cache bypass, [purge (full and path)](https://ollanode.com/docs/cdn), hit/miss analytics, hotlink tokens.
 
 6. **DNS (optional but powerful)**  
    Authoritative DNS next to CDN zones reduces vendor sprawl for custom domains.
 
 7. **Edge functions / compute**  
-   V8 isolates for signing helpers, geo logic, BFF endpoints, cron warmers — with secrets, rate limits, and rollback.
+   [V8 isolates for signing helpers](https://ollanode.com/docs/edge), geo logic, BFF endpoints, cron warmers — with secrets, rate limits, and rollback.
 
 8. **Webhooks and automation**  
-   Signed deliveries, retries, dead-letter visibility, Mux-compatible event names if you are migrating.
+   [Signed deliveries](https://ollanode.com/docs/webhooks), retries, dead-letter visibility, Mux-compatible event names if you are migrating.
 
 9. **Accounts, roles, scopes**  
    Owner/admin/member/viewer style roles plus fine-grained scopes (videos:write, zones:purge, etc.).
 
 10. **Security and governance**  
-    WAF, SSRF protections on outbound fetches, origin guards, agent approval flows if AI operators are in scope, tamper-evident audit logs.
+    [WAF and SSRF protections](https://ollanode.com/docs/security) on outbound fetches, origin guards, agent approval flows if AI operators are in scope, tamper-evident audit logs.
 
 Ollanode’s platform map covers these layers explicitly — video, playback, thumbnails/transcripts, CDN, storage + imgproxy, DNS (Hickory), edge functions, webhooks, accounts, AI-agent model, security (Coraza), and orchestration — which is the right shape even if you only turn some features on at first.
 
@@ -332,7 +332,7 @@ Self-hosting is not free. It is a shift from variable COGS with low ops to infra
 | **Image optimizer for posters (optional)** | Completes media UX |
 | **Agent/automation governance (emerging)** | Safe ops with AI tools |
 
-Ollanode maps cleanly onto this checklist: HLS 360p–4K with no upscaling, signed playback cookies/tokens, AES-128 option, WhisperX transcripts, SeaweedFS/S3 zones, imgproxy, OpenResty zones with purge and analytics, HMAC webhooks, scoped keys, Coraza WAF, and approval-gated agent actions.
+Ollanode maps cleanly onto this checklist: HLS 360p–4K with no upscaling, signed playback cookies/tokens, AES-128 option, [WhisperX transcripts](https://ollanode.com/docs/ai), SeaweedFS/S3 zones, imgproxy, OpenResty zones with purge and analytics, HMAC webhooks, scoped keys, Coraza WAF, and approval-gated agent actions.
 
 ---
 
@@ -556,7 +556,7 @@ Everything else is secondary.
 
 ### Step 3: Demand a real control plane
 Ask for:
-- OpenAPI spec
+- [OpenAPI spec and REST endpoints](https://ollanode.com/docs/api)
 - Asset lifecycle states
 - Idempotency and rate limit behavior
 - Scope model
@@ -619,7 +619,7 @@ Compare against projected managed SaaS invoices at the same volume. Use realisti
 - Centralized SSO in your app; platform keys minted per environment
 - Audit exports for SIEM
 
-Enterprise buyers should ask for tenant isolation evidence, retention controls, and administrative kill switches for automation identities.
+Enterprise buyers should ask for tenant isolation evidence, retention controls, and administrative kill switches for automation identities. For dedicated deployment assistance, explore [Ollanode enterprise support and contact](https://ollanode.com/#contact).
 
 ### Cloud deployment patterns
 - Run control plane on managed Kubernetes or VM groups
@@ -657,7 +657,7 @@ Not necessarily. Many production platforms are VOD-only. Live/RTMP ingest, low-l
 Ollanode is an Apache-2.0, self-hosted, API-first stack that unifies VOD processing (adaptive HLS, thumbnails, transcripts), S3-compatible storage, CDN pull zones, DNS, and edge functions under one control plane — with signed playback and ownership-first deployment. It is a concrete reference for the architecture this guide describes, especially for teams that want VOD without building the glue layer from scratch.
 
 ### 8) How do I choose between self-hosted and managed video SaaS?
-Choose managed when speed-to-demo and near-zero ops dominate, and volume/compliance pressure is low. Choose self-hosted when residency, private delivery, catalog-scale economics, or custom policy dominate — and you can operate (or buy support for) API, workers, storage, and edge. Run a 12-month TCO model with your real upload mix before deciding.
+Choose managed when speed-to-demo and near-zero ops dominate, and volume/compliance pressure is low. Choose self-hosted when residency, private delivery, catalog-scale economics, or custom policy dominate — and you can operate (or buy support for) API, workers, storage, and edge. Run a 12-month TCO model with your real upload mix before deciding, and evaluate [Ollanode self-hosted vs managed tiers](https://ollanode.com/#pricing).
 
 ---
 
@@ -669,7 +669,7 @@ Choose managed when speed-to-demo and near-zero ops dominate, and volume/complia
 - [Processing & AI docs](https://ollanode.com/docs/pipeline)
 - [Playback docs](https://ollanode.com/docs/playback)
 - [Webhooks docs](https://ollanode.com/docs/webhooks)
-- Related reading on Ollanode Blog: dynamic HLS ladders, first open-source pipeline setup, and ownership-focused architecture posts (avoid treating those as substitutes for this category guide)
+- Related reading on Ollanode Blog: [dynamic HLS ladders](/blog/step-by-step-how-to-generate-dynamic-hls-resolution-ladders/), [first open-source pipeline setup](/blog/step-by-step-setting-up-your-first-open-source-video-pipeline-with-ollanode/), and [ownership-focused architecture posts](/blog/why-we-built-an-open-source-mux-alternative-in-rust/) (avoid treating those as substitutes for this category guide)
 
 ---
 
