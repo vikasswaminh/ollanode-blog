@@ -48,31 +48,6 @@ A self-hosted video platform is not “ffmpeg on a VM.” It is a control plane 
 
 ---
 
-## Table of Contents
-1. [Problem Statement: Why Self-Hosted Video Matters in 2026](#1-problem-statement-why-self-hosted-video-matters-in-2026)
-2. [A Short History of How Teams Got Here](#2-a-short-history-of-how-teams-got-here)
-3. [Definition: Self-Hosted Video Platform](#3-definition-self-hosted-video-platform)
-4. [Architecture: Control Plane, Processing Plane, Delivery Plane](#4-architecture-control-plane-processing-plane-delivery-plane)
-5. [Internal Working: What Happens After Upload](#5-internal-working-what-happens-after-upload)
-6. [Core Components You Should Expect](#6-core-components-you-should-expect)
-7. [End-to-End Workflow](#7-end-to-end-workflow)
-8. [Configuration Patterns That Matter](#8-configuration-patterns-that-matter)
-9. [Practical Examples and Use Cases](#9-practical-examples-and-use-cases)
-10. [Benefits (With Honest Trade-offs)](#10-benefits-with-honest-trade-offs)
-11. [Features Checklist for 2026](#11-features-checklist-for-2026)
-12. [Performance Considerations](#12-performance-considerations)
-13. [Security Model](#13-security-model)
-14. [Troubleshooting and Operational Reality](#14-troubleshooting-and-operational-reality)
-15. [Best Practices](#15-best-practices)
-16. [Common Mistakes](#16-common-mistakes)
-17. [Alternatives and Comparison Tables](#17-alternatives-and-comparison-tables)
-18. [How to Choose a Self-Hosted Video Platform in 2026](#18-how-to-choose-a-self-hosted-video-platform-in-2026)
-19. [Enterprise and Cloud Deployment Notes](#19-enterprise-and-cloud-deployment-notes)
-20. [Frequently Asked Questions](#20-frequently-asked-questions)
-21. [References](#21-references)
-22. [Conclusion](#22-conclusion)
-
----
 
 ## 1. Problem Statement: Why Self-Hosted Video Matters in 2026
 

@@ -15,8 +15,12 @@ const { title, description, pubDate, updatedDate, author, tags = [] } = post.dat
 const minutes = readingTime(post.body);
 const canonical = new URL(`/blog/${post.slug}/`, Astro.site).href;
 
-// Filter H2 and H3 for Table of Contents (exclude numbered FAQ items)
-const tocHeadings = headings.filter((h) => h.depth === 2 || (h.depth === 3 && !/^\d+\./.test(h.text)));
+// Filter H2 and H3 for Table of Contents (exclude literal "table of contents" and numbered FAQ items)
+const tocHeadings = headings.filter((h) => {
+  const textLower = h.text.toLowerCase();
+  if (textLower.includes('table of contents')) return false;
+  return h.depth === 2 || (h.depth === 3 && !/^\d+[\.\)]/.test(h.text));
+});
 
 // Query real published blog posts for Related Reading
 const allPublished = await getPublishedPosts();
