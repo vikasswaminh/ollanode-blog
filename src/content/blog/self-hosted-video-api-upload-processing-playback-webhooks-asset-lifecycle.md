@@ -48,34 +48,6 @@ A self-hosted video API is the product surface your backend, frontend, CI, and a
 
 ---
 
-## Table of Contents
-1. [Problem Statement: Why Video APIs Fail in Production](#1-problem-statement-why-video-apis-fail-in-production)
-2. [A Short History of Video API Contracts](#2-a-short-history-of-video-api-contracts)
-3. [Definition: Self-Hosted Video API](#3-definition-self-hosted-video-api)
-4. [Architecture: Control Plane vs Data Plane](#4-architecture-control-plane-vs-data-plane)
-5. [Internal Working: Request Path and Job Path](#5-internal-working-request-path-and-job-path)
-6. [Components of the API Surface](#6-components-of-the-api-surface)
-7. [End-to-End Workflow](#7-end-to-end-workflow)
-8. [Upload and Ingest in Depth](#8-upload-and-ingest-in-depth)
-9. [Processing and Status Contracts](#9-processing-and-status-contracts)
-10. [Playback and Delivery Contracts](#10-playback-and-delivery-contracts)
-11. [Webhooks and Event-Driven Integration](#11-webhooks-and-event-driven-integration)
-12. [Asset Lifecycle End to End](#12-asset-lifecycle-end-to-end)
-13. [Configuration Patterns That Matter](#13-configuration-patterns-that-matter)
-14. [Practical Examples](#14-practical-examples)
-15. [Performance Considerations](#15-performance-considerations)
-16. [Security Model](#16-security-model)
-17. [Troubleshooting Reference](#17-troubleshooting-reference)
-18. [Best Practices](#18-best-practices)
-19. [Common Mistakes](#19-common-mistakes)
-20. [Alternatives and Comparison Tables](#20-alternatives-and-comparison-tables)
-21. [Enterprise and Cloud Deployment Notes](#21-enterprise-and-cloud-deployment-notes)
-22. [Frequently Asked Questions](#22-frequently-asked-questions)
-23. [References](#23-references)
-24. [Conclusion](#24-conclusion)
-
----
-
 ## 1. Problem Statement: Why Video APIs Fail in Production
 
 In 2026, video is product surface area. It is onboarding, course content, sales demos, support libraries, compliance evidence, and customer-facing product features. The moment video becomes core, teams stop asking whether they can encode a file and start asking whether their backend can trust the API.
@@ -405,7 +377,7 @@ Upload tokens for TUS should be one-time and tenant-bound. `source_url` and webh
 
 Encrypted HLS keys must travel through the same gated path as segments. Soft-delete and purge support data minimization. When AI agents hold write scopes, destructive actions should be approval-gated and audited.
 
-[Ollanode's](https://ollanode.com) broader platform adds WAF controls and origin guards around the gateway. Even if you only adopt the video API slice first, keep defense in depth around authentication, egress, and playback.
+Ollanode's broader platform adds WAF controls and origin guards around the gateway. Even if you only adopt the video API slice first, keep defense in depth around authentication, egress, and playback.
 
 ---
 
@@ -474,7 +446,7 @@ Encrypted HLS keys must travel through the same gated path as segments. Soft-del
 | **Clear VOD boundary** | Avoid live-scope surprises |
 | **License** | Apache-2.0 versus AGPL traps for products |
 
-[Ollanode](https://ollanode.com) is a strong reference when you want that full contract under software you run: upload, async process, signed HLS playback, HMAC webhooks, and soft-delete lifecycle, without live or RTMP scope creep.
+Ollanode is a strong reference when you want that full contract under software you run: upload, async process, signed HLS playback, HMAC webhooks, and soft-delete lifecycle, without live or RTMP scope creep.
 
 Managed platforms remain a rational choice when your team cannot operate workers and edge yet. DIY scripts remain a rational prototype. The self-hosted video API becomes the rational production choice when the contract itself is part of your product and ownership matters.
 
@@ -534,4 +506,4 @@ A self-hosted video API is not ffmpeg with routes. It is a disciplined contract 
 
 If you keep those contracts explicit, your product code stays boring in the best way. Create the asset. Wait for ready. Play. Publish. That is the bar in 2026.
 
-[Ollanode](https://ollanode.com) is one working implementation of that bar—an Apache-2.0, API-first, VOD-only stack where the lifecycle is visible, the webhooks are verifiable, and the playback path does not accidentally become a public bucket. Use it as a reference architecture, or as the control plane you actually run.
+Ollanode is one working implementation of that bar—an Apache-2.0, API-first, VOD-only stack where the lifecycle is visible, the webhooks are verifiable, and the playback path does not accidentally become a public bucket. Use it as a reference architecture, or as the control plane you actually run.
