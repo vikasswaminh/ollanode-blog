@@ -58,6 +58,7 @@ function getPostCategoryKeys(post: any): string[] {
 
 function formatSidebarTitle(title: string) {
   const shortMap: Record<string, string> = {
+    'Self-Hosted Video API: Upload, Processing, Playback, Webhooks, and Asset Lifecycle': 'Self-Hosted Video API Lifecycle',
     'Building a Production-Grade HLS Transcoding Pipeline with Rust and NATS Jetstream': 'Production HLS Transcoding in Rust',
     'Why We Built an Open Source Mux Alternative in Rust': 'Open Source Mux Alternative in Rust',
     'Step-by-Step: Setting Up Your First Open Source Video Pipeline with OllaNode': 'Setting Up Open Video Pipeline',
@@ -82,6 +83,7 @@ function formatSidebarTitle(title: string) {
 
 function formatMobileSubcardTitle(title: string) {
   const shortMap: Record<string, string> = {
+    'Self-Hosted Video API: Upload, Processing, Playback, Webhooks, and Asset Lifecycle': 'Self-Hosted Video API',
     'Building a Production-Grade HLS Transcoding Pipeline with Rust and NATS Jetstream': 'Production HLS in Rust',
     'Why We Built an Open-Source Mux Alternative in Rust: The True Cost of Per-Minute Billing': 'Open Source Mux Alternative',
     'Why We Built an Open Source Mux Alternative in Rust': 'Open Source Mux Alternative',
@@ -111,6 +113,7 @@ function formatMobileSubcardTitle(title: string) {
 
 function formatMobileSubcardDesc(desc: string) {
   const shortDescMap: Record<string, string> = {
+    'A practical 2026 deep dive into self-hosted video APIs—upload paths, async processing, signed playback, HMAC webhooks, and asset lifecycle—with Ollanode as a working reference.': 'Deep dive into self-hosted video APIs: ingest, async HLS & webhooks.',
     'An implementation-focused guide to using the Model Context Protocol (MCP) to let AI agents inspect, reason about, and control video infrastructure with Ollanode.': 'Control video infra with MCP & AI agents.',
     'A complete, step-by-step guide to building a source-aware, dynamic HLS resolution ladder with Ollanode — from bitrate theory to a working 360p-to-4K adaptive stream.': 'Build 360p to 4K dynamic HLS ladders.',
     'A complete, step-by-step guide to installing, configuring, securing, and scaling your first self-hosted video pipeline with Ollanode — from upload to adaptive HLS delivery.': 'Deploy self-hosted VOD & HLS streaming.',
