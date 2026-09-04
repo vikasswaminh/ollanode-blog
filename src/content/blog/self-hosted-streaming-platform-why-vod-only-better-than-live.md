@@ -3,7 +3,7 @@ title: 'Self-Hosted Streaming Platform: Why VOD-Only Can Be Better Than Live Str
 seoTitle: 'Self-Hosted Streaming Platform: Why VOD-Only Beats Live in 2026'
 description: 'Why a VOD-only self-hosted streaming platform can outperform a live-capable one — architecture, cost, reliability, and when live is actually worth the complexity.'
 category: 'Video & CDN'
-pubDate: 2026-09-04
+pubDate: 2026-09-04T09:00:00.000Z
 author: 'The OllaNode Team'
 tags: ['Video & CDN', 'VOD', 'HLS', 'Self-Hosted', 'Live Streaming', 'CDN', 'Storage', 'Architecture', 'Video Infrastructure', 'Apache-2.0']
 ---
