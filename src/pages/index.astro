@@ -12,133 +12,70 @@ const rest = posts.slice(1);
 const categories = [
   { label: 'All', tag: 'all', href: '#all' },
   { label: 'Video Infrastructure & Developer Platforms', tag: 'video-infra-platforms', href: '#video-infra-platforms' },
+  { label: 'Video & CDN', tag: 'video', href: '#video' },
   { label: 'Product & Changelog', tag: 'product', href: '#product' },
   { label: 'Guides', tag: 'guides', href: '#guides' },
   { label: 'Comparisons', tag: 'comparisons', href: '#comparisons' },
-  { label: 'Video & CDN', tag: 'video', href: '#video' },
   { label: 'AI & agents', tag: 'ai', href: '#ai' },
   { label: 'Engineering', tag: 'engineering', href: '#engineering' },
-  { label: 'Security, Edge & Performance', tag: 'security', href: '#security' },
 ];
 
 const quickJumpLinks = [
   { label: 'Featured', href: '#featured' },
   { label: 'Video Infra & Platforms', href: '#video-infra-platforms' },
+  { label: 'Video & CDN', href: '#video' },
   { label: 'Guides', href: '#guides' },
   { label: 'Comparisons', href: '#comparisons' },
-  { label: 'Video & CDN', href: '#video' },
+  { label: 'AI & Agents', href: '#ai' },
+  { label: 'Engineering', href: '#engineering' },
+  { label: 'Product', href: '#product' },
   { label: 'Pricing', href: '#pricing-tab' },
   { label: 'Archive', href: '#archive' },
 ];
 
-function getPostCategoryKeys(post: any): string[] {
-  const keys = new Set<string>();
+function getPostCategoryKey(post: any): string {
   const cat = String(post.data.category || '').toLowerCase().trim();
-  const tags = (post.data.tags || []).map((t: string) => t.toLowerCase().trim());
-  const firstTag = tags[0] || '';
 
-  // 1. Video Infrastructure & Developer Platforms
-  if (
-    cat.includes('developer platform') ||
-    cat.includes('video infrastructure') ||
-    tags.includes('developer platforms') ||
-    tags.includes('video infrastructure')
-  ) {
-    keys.add('video-infra-platforms');
+  // 1. Any blog with Video Infrastructure or Developer Platform in its category
+  if (cat.includes('video infrastructure') || cat.includes('developer platform')) {
+    return 'video-infra-platforms';
   }
 
-  // 2. Product & Changelog
-  if (
-    cat.includes('product') ||
-    cat.includes('changelog') ||
-    firstTag.includes('product') ||
-    firstTag.includes('changelog')
-  ) {
-    keys.add('product');
+  // 2. Video & CDN
+  if (cat.includes('video & cdn') || cat.includes('video and cdn') || cat === 'video') {
+    return 'video';
   }
 
-  // 3. Guides
-  if (
-    cat.includes('guide') ||
-    firstTag.includes('guide') ||
-    cat.includes('tutorial') ||
-    tags.includes('guides') ||
-    post.slug.startsWith('step-by-step')
-  ) {
-    keys.add('guides');
+  // 3. Product & Changelog
+  if (cat.includes('product') || cat.includes('changelog')) {
+    return 'product';
   }
 
-  // 4. Comparisons
-  if (
-    cat.includes('comparison') ||
-    firstTag.includes('comparison') ||
-    tags.includes('comparisons') ||
-    tags.includes('comparison') ||
-    tags.includes('mux alternative') ||
-    tags.includes('saas') ||
-    post.slug.includes('vs-saas') ||
-    post.slug.includes('mux-alternative')
-  ) {
-    keys.add('comparisons');
+  // 4. Guides
+  if (cat.includes('guide') || cat.includes('tutorial')) {
+    return 'guides';
   }
 
-  // 5. Video & CDN
-  if (
-    cat === 'video & cdn' ||
-    cat.includes('video & cdn') ||
-    cat.includes('video and cdn') ||
-    firstTag === 'video & cdn' ||
-    post.slug.includes('streaming-platform') ||
-    post.slug.includes('video-api') ||
-    post.slug.includes('resolution-ladders')
-  ) {
-    keys.add('video');
+  // 5. Comparisons
+  if (cat.includes('comparison')) {
+    return 'comparisons';
   }
 
   // 6. AI & Agents
-  if (
-    cat.includes('ai') ||
-    cat.includes('agent') ||
-    tags.includes('ai & agents') ||
-    tags.includes('mcp')
-  ) {
-    keys.add('ai');
+  if (cat.includes('ai') || cat.includes('agent')) {
+    return 'ai';
   }
 
   // 7. Engineering
-  if (
-    cat === 'engineering' ||
-    firstTag === 'engineering' ||
-    cat.includes('architecture') ||
-    tags.includes('engineering') ||
-    tags.includes('architecture') ||
-    tags.includes('distributed-systems')
-  ) {
-    keys.add('engineering');
+  if (cat.includes('engineering')) {
+    return 'engineering';
   }
 
-  // 8. Security, Edge & Performance
-  if (
-    cat.includes('security') ||
-    cat.includes('observability') ||
-    tags.includes('access control') ||
-    tags.includes('observability') ||
-    tags.includes('monitoring') ||
-    tags.includes('cybersecurity')
-  ) {
-    keys.add('security');
-  }
-
-  if (keys.size === 0) {
-    keys.add('other');
-  }
-
-  return Array.from(keys);
+  return 'other';
 }
 
-function getPostCategoryKey(post: any): string {
-  const keys = getPostCategoryKeys(post);
-  return keys[0] || 'other';
+function getPostCategoryKeys(post: any): string[] {
+  return [getPostCategoryKey(post)];
 }
 
 function formatSidebarTitle(title: string) {
@@ -329,7 +266,7 @@ const archiveCategories = categories
                 id="featured"
                 href={`/blog/${featured.slug}/`}
                 class="featured-main-card featured-main-card-no-img"
-                data-category={getPostCategoryKeys(featured).join(' ')}
+                data-category={getPostCategoryKey(featured)}
                 aria-label={`Read featured post: ${featured.data.title}`}
               >
                 <div class="featured-content-wrapper">
@@ -342,7 +279,7 @@ const archiveCategories = categories
                     </span>
                   </div>
 
-                  <div class="featured-category-badge">{featured.data.tags[0] || 'Engineering'}</div>
+                  <div class="featured-category-badge">{featured.data.category || featured.data.tags[0] || 'Article'}</div>
 
                   <h3 class="featured-title">
                     <span>{featured.data.title}</span>
@@ -363,7 +300,7 @@ const archiveCategories = categories
           <!-- All Other Blog Cards Grid (Yellow Borders) Below Big Featured Card -->
           <div class="subcards-grid">
             {rest.map((post) => (
-              <div class="subcard-item" data-category={getPostCategoryKeys(post).join(' ')}>
+              <div class="subcard-item" data-category={getPostCategoryKey(post)}>
                 <span class="subcard-tag">{post.data.category || post.data.tags[0] || 'Article'}</span>
                 <h4 class="subcard-title">
                   <a href={`/blog/${post.slug}/`}>
@@ -517,12 +454,11 @@ const archiveCategories = categories
           }
         }
 
-        // Filter middle feed cards (exact category match: only that category appears!)
+        // Filter middle feed cards (strict 1-to-1 category match)
         let visibleCount = 0;
         cards.forEach((card) => {
-          const rawCats = (card.getAttribute('data-category') || '').toLowerCase().trim();
-          const cardCats = rawCats.split(/\s+/);
-          const isMatch = targetCat === 'all' || cardCats.includes(targetCat);
+          const cardCat = (card.getAttribute('data-category') || '').toLowerCase().trim();
+          const isMatch = targetCat === 'all' || cardCat === targetCat;
           
           if (isMatch) {
             card.classList.remove('card-category-hidden');
@@ -552,7 +488,7 @@ const archiveCategories = categories
       document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
         const href = link.getAttribute('href') || '';
         const catKey = href.replace('#', '').toLowerCase().trim();
-        const validCats = ['product', 'guides', 'comparisons', 'video', 'ai', 'engineering', 'security', 'video-infra-platforms', 'all'];
+        const validCats = ['video-infra-platforms', 'video', 'product', 'guides', 'comparisons', 'ai', 'engineering', 'all'];
         if (validCats.includes(catKey)) {
           link.addEventListener('click', (e) => {
             e.preventDefault();
