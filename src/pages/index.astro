@@ -11,17 +11,19 @@ const rest = posts.slice(1);
 
 const categories = [
   { label: 'All', tag: 'all', href: '#all' },
+  { label: 'Video Infrastructure & Developer Platforms', tag: 'video-infra-platforms', href: '#video-infra-platforms' },
   { label: 'Product & Changelog', tag: 'product', href: '#product' },
   { label: 'Guides', tag: 'guides', href: '#guides' },
   { label: 'Comparisons', tag: 'comparisons', href: '#comparisons' },
-  { label: 'Video and CDN', tag: 'video', href: '#video' },
+  { label: 'Video & CDN', tag: 'video', href: '#video' },
   { label: 'AI & agents', tag: 'ai', href: '#ai' },
   { label: 'Engineering', tag: 'engineering', href: '#engineering' },
-  { label: 'Security, Edge and Performance', tag: 'security', href: '#security' },
+  { label: 'Security, Edge & Performance', tag: 'security', href: '#security' },
 ];
 
 const quickJumpLinks = [
   { label: 'Featured', href: '#featured' },
+  { label: 'Video Infra & Platforms', href: '#video-infra-platforms' },
   { label: 'Guides', href: '#guides' },
   { label: 'Comparisons', href: '#comparisons' },
   { label: 'Video & CDN', href: '#video' },
@@ -31,32 +33,99 @@ const quickJumpLinks = [
 
 function getPostCategoryKeys(post: any): string[] {
   const keys = new Set<string>();
-  const textToScan = [
-    post.data.category || '',
-    ...(post.data.tags || []),
-    post.data.title || '',
-    post.data.description || ''
-  ].join(' ').toLowerCase();
+  const cat = String(post.data.category || '').toLowerCase().trim();
+  const tags = (post.data.tags || []).map((t: string) => t.toLowerCase().trim());
+  const firstTag = tags[0] || '';
 
-  if (textToScan.includes('product') || textToScan.includes('changelog') || textToScan.includes('release') || textToScan.includes('introducing')) {
+  // 1. Video Infrastructure & Developer Platforms
+  if (
+    cat.includes('developer platform') ||
+    cat.includes('video infrastructure') ||
+    tags.includes('developer platforms') ||
+    tags.includes('video infrastructure')
+  ) {
+    keys.add('video-infra-platforms');
+  }
+
+  // 2. Product & Changelog
+  if (
+    cat.includes('product') ||
+    cat.includes('changelog') ||
+    firstTag.includes('product') ||
+    firstTag.includes('changelog')
+  ) {
     keys.add('product');
   }
-  if (textToScan.includes('guide') || textToScan.includes('tutorial') || textToScan.includes('step-by-step') || textToScan.includes('blueprint') || textToScan.includes('how-to') || textToScan.includes('how to')) {
+
+  // 3. Guides
+  if (
+    cat.includes('guide') ||
+    firstTag.includes('guide') ||
+    cat.includes('tutorial') ||
+    tags.includes('guides') ||
+    post.slug.startsWith('step-by-step')
+  ) {
     keys.add('guides');
   }
-  if (textToScan.includes('comparison') || textToScan.includes(' vs ') || textToScan.includes('alternative') || textToScan.includes('vs:')) {
+
+  // 4. Comparisons
+  if (
+    cat.includes('comparison') ||
+    firstTag.includes('comparison') ||
+    tags.includes('comparisons') ||
+    tags.includes('comparison') ||
+    tags.includes('mux alternative') ||
+    tags.includes('saas') ||
+    post.slug.includes('vs-saas') ||
+    post.slug.includes('mux-alternative')
+  ) {
     keys.add('comparisons');
   }
-  if (textToScan.includes('video') || textToScan.includes('cdn') || textToScan.includes('vod') || textToScan.includes('streaming') || textToScan.includes('hls') || textToScan.includes('transcoding') || textToScan.includes('playback')) {
+
+  // 5. Video & CDN
+  if (
+    cat === 'video & cdn' ||
+    cat.includes('video & cdn') ||
+    cat.includes('video and cdn') ||
+    firstTag === 'video & cdn' ||
+    post.slug.includes('streaming-platform') ||
+    post.slug.includes('video-api') ||
+    post.slug.includes('resolution-ladders')
+  ) {
     keys.add('video');
   }
-  if (textToScan.includes('ai') || textToScan.includes('agent') || textToScan.includes('mcp')) {
+
+  // 6. AI & Agents
+  if (
+    cat.includes('ai') ||
+    cat.includes('agent') ||
+    tags.includes('ai & agents') ||
+    tags.includes('mcp')
+  ) {
     keys.add('ai');
   }
-  if (textToScan.includes('engineer') || textToScan.includes('architect') || textToScan.includes('rust') || textToScan.includes('nats') || textToScan.includes('pipeline') || textToScan.includes('infra') || textToScan.includes('tenant') || textToScan.includes('api')) {
+
+  // 7. Engineering
+  if (
+    cat === 'engineering' ||
+    firstTag === 'engineering' ||
+    cat.includes('architecture') ||
+    tags.includes('engineering') ||
+    tags.includes('architecture') ||
+    tags.includes('distributed-systems')
+  ) {
     keys.add('engineering');
   }
-  if (textToScan.includes('security') || textToScan.includes('edge') || textToScan.includes('performance') || textToScan.includes('auth') || textToScan.includes('quota') || textToScan.includes('access control') || textToScan.includes('isolation') || textToScan.includes('billing')) {
+
+  // 8. Security, Edge & Performance
+  if (
+    cat.includes('security') ||
+    cat.includes('observability') ||
+    tags.includes('access control') ||
+    tags.includes('observability') ||
+    tags.includes('monitoring') ||
+    tags.includes('cybersecurity')
+  ) {
     keys.add('security');
   }
 
@@ -483,7 +552,7 @@ const archiveCategories = categories
       document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
         const href = link.getAttribute('href') || '';
         const catKey = href.replace('#', '').toLowerCase().trim();
-        const validCats = ['product', 'guides', 'comparisons', 'video', 'ai', 'engineering', 'security', 'all'];
+        const validCats = ['product', 'guides', 'comparisons', 'video', 'ai', 'engineering', 'security', 'video-infra-platforms', 'all'];
         if (validCats.includes(catKey)) {
           link.addEventListener('click', (e) => {
             e.preventDefault();
