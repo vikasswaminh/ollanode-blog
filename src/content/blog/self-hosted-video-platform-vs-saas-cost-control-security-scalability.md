@@ -1,7 +1,7 @@
 ---
 title: 'Self-Hosted Video Platform vs SaaS: Cost, Control, Security, and Scalability'
-seoTitle: 'Self-Hosted Video Platform vs SaaS in 2026: Cost, Control, Security & Scale'
-description: 'A decision framework for self-hosted video platform vs SaaS across cost, control, security, and scalability — with honest trade-offs, comparison tables, and Ollanode as a reference.'
+seoTitle: 'Self-Hosted Video Platform vs SaaS: Cost, Security & Scalability'
+description: 'Compare self-hosted video platforms vs SaaS across cost, control, security, scalability, and infrastructure ownership, with practical trade-offs and comparison guidance.'
 category: 'Video & CDN'
 pubDate: 2026-09-04T15:00:00.000Z
 author: 'The OllaNode Team'
