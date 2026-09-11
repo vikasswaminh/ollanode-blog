@@ -8,23 +8,26 @@ export async function getStaticPaths() {
   const allTopics = await getAllTopics();
 
   return allTopics.map((topic) => {
-    // Filter posts that have this tag (case-insensitive or normalized)
-    const matchingPosts = posts.filter((p) =>
-      (p.data.tags || []).some(
-        (t) => t.toLowerCase() === topic.name.toLowerCase() || t.toLowerCase().includes(topic.name.toLowerCase())
-      )
-    );
-    const isDirectMatch = matchingPosts.length > 0;
-    const finalPosts = isDirectMatch ? matchingPosts : posts.slice(0, 3);
+  const topicName = topic.name.trim().toLowerCase();
 
-    return {
-      params: { tag: topic.name },
-      props: { posts: finalPosts, tag: topic.name, isDirectMatch, matchCount: matchingPosts.length },
-    };
-  });
+  const matchingPosts = posts.filter((p) =>
+    (p.data.tags || []).some(
+      (t) => t.trim().toLowerCase() === topicName
+    )
+  );
+
+  return {
+    params: { tag: topic.name },
+    props: {
+      posts: matchingPosts,
+      tag: topic.name,
+      isDirectMatch: matchingPosts.length > 0,
+      matchCount: matchingPosts.length,
+    },
+  };
+});
 }
-
-const { posts, tag, isDirectMatch, matchCount } = Astro.props;
+const { posts: tagPosts, tag, isDirectMatch, matchCount } = Astro.props;
 ---
 
 <BaseLayout
@@ -58,7 +61,7 @@ const { posts, tag, isDirectMatch, matchCount } = Astro.props;
     <!-- Articles Grid under this Tag -->
     <div class="tag-articles-cards-grid">
       {
-        posts.map((p) => {
+        tagPosts.map((p) => {
           const category = p.data.category || p.data.tags[0] || 'Engineering';
           const pubDateFormatted = p.data.pubDate.toLocaleDateString('en-US', {
             year: 'numeric',
