@@ -1,7 +1,7 @@
 ---
 title: 'Self-Hosted Video API: Upload, Processing, Playback, Webhooks, and Asset Lifecycle'
-seoTitle: 'Self-Hosted Video API: Upload, Processing, Playback & Lifecycle (2026)'
-description: 'A practical 2026 deep dive into self-hosted video APIs—upload paths, async processing, signed playback, HMAC webhooks, and asset lifecycle—with Ollanode as a working reference.'
+seoTitle: 'Self-Hosted Video API: Upload, Processing, Playback, Webhooks & Lifecycle'
+description: 'Learn how a self-hosted video API handles upload, async processing, playback, webhooks, and asset lifecycle with Ollanode as a practical reference.'
 category: 'Video & CDN'
 pubDate: 2026-09-03
 author: 'The OllaNode Team'
@@ -16,7 +16,7 @@ This guide is the API-shaped version of that problem. It is not a product launch
 
 ---
 
-## Quick Answer: What Is a Self-Hosted Video API?
+## Self-Hosted Video API: Complete Guide to Upload, Processing, Playback & Webhooks
 
 | Question | Quick answer |
 | :--- | :--- |
@@ -97,6 +97,8 @@ A credible self-hosted video API splits into two planes, even when both run in y
 **The control plane** answers intent. Create this asset. Use signed playback. Cap height at 1080p. Encrypt the HLS package. Notify these webhook endpoints when the asset is ready or errored. List inventory. Soft-delete and purge.
 
 **The data plane** answers bytes. PUT upload parts to object storage. Fetch manifests. Stream segments. Cache at the edge. Deliver AES keys through the same gated path as media when encryption is enabled.
+
+For a broader look at self-hosted video infrastructure, see our guide to [Best Open Source Video Infrastructure](/blog/best-open-source-video-infrastructure-2026-startups-mid-market/).
 
 Your application, CI system, or agent talks to the API gateway with bearer tokens or API keys. That gateway enforces authentication, scopes, rate limits, idempotency, and request IDs. Behind it, the control plane creates records, mints upload targets, tracks status, mints playback tokens, and manages webhook subscriptions. Storage holds originals and derivatives. Async workers validate, encode, package, and enrich. The playback host and CDN edge deliver to viewers without exposing private buckets.
 
@@ -190,7 +192,7 @@ Creating first is not ceremony. It gives you a stable ID for retries, a place to
 | **Multipart** | Large files | Begin, presign parts, complete and start pipeline |
 | **TUS resumable** | Browser and flaky networks | tusd at `/files/` with `videoId` and one-time `uploadToken` |
 | **`source_url`** | Migrations and remote masters | Platform fetches; no separate upload step |
-
+For a deeper implementation walkthrough, see our guide on [How to Generate Dynamic HLS Resolution Ladders](/blog/step-by-step-how-to-generate-dynamic-hls-resolution-ladders/).
 The design rule for direct uploads is simple. Bytes never pass through the API. The API orchestrates. Object storage receives the PUT.
 
 - **Presigned PUT pattern:** Mint a short-lived upload URL, PUT the whole file to that URL, then finalize with upload-complete and the observed size. Finalization is what starts the pipeline. If you skip finalize, you have an object in storage and a video record that never becomes ready. This path is ideal when the client is trusted enough to complete a single PUT and the file is not huge. It is also easy to reason about in backend-to-backend transfers.
@@ -276,6 +278,7 @@ curl -X POST https://api.ollanode.com/v1/webhooks \
 Store the signing secret immediately. It is shown once. List endpoints should not re-expose it. Patch should let you rotate URL, event set, or active state. Delivery history should be queryable newest first with status and response codes.
 
 Webhook URLs should be SSRF-vetted. An open webhook create endpoint that can hit internal metadata services is an incident.
+For a broader architecture view, see our guide to [Multi-Tenant Self-Hosted Video Platform](/blog/multi-tenant-self-hosted-video-platform-isolation-quotas-access-control-billing/).
 
 ### Event vocabulary
 Mux-compatible naming helps migrations and mental models.
