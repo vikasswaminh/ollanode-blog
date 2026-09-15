@@ -8,7 +8,7 @@ author: 'The OllaNode Team'
 tags: ['CDN', 'Video Delivery', 'Observability', 'Performance', 'Latency', 'Cache Hit Ratio', 'OpenResty', 'Edge Functions', 'Ollanode', 'Apache-2.0']
 ---
 
-## Executive Summary: The Observability Blind Spot at the Edge
+## CDN Performance Monitoring: The Observability Blind Spot at the Edge
 
 A content delivery network is often treated as a binary utility: it is either routing traffic or it is completely offline. In production video streaming and high-concurrency API environments, binary health checks fail to capture the true operational state of your delivery layer. A CDN can report an aggregate 99.99% uptime while silently degrading viewer Quality of Experience (QoE). A 200ms latency creep on adaptive bitrate manifests triggers player stalls, an unmonitored origin shield collapse converts thousands of cached hits into an origin-saturating thundering herd, and intermittent 502 Bad Gateway responses at specific regional Points of Presence (POPs) go unnoticed because global averages mask regional anomalies.
 
@@ -40,7 +40,7 @@ This technical guide demonstrates how to build, configure, and operate an end-to
 
 ---
 
-## The Architectural Necessity of CDN Performance Monitoring
+## Why CDN Performance Monitoring Matters for Video Delivery
 
 When delivering video on demand (VOD), modern media architectures rely on edge pull zones to shield upstream storage systems—such as MinIO, Ceph, SeaweedFS, or AWS S3—from catastrophic request volume. Consider the physical mechanics of streaming an adaptive HLS video: a single 60-minute video encoded across five adaptive renditions (from 360p up to 4K) comprises one master playlist, five variant playlists, and over 1,800 discrete media segments (assuming standard 2-second fragment durations). When 50,000 concurrent viewers tune into a newly published asset, the delivery layer must serve 90 million discrete HTTP requests over the course of an hour.
 
@@ -53,9 +53,11 @@ Without dedicated CDN performance monitoring, failures in this delivery fabric r
 
 Observability is not an operational afterthought; it is an active feedback loop. By instrumenting high-precision metrics at the edge layer, platform engineers can automatically detect localized transit peering failures, identify degraded storage pools before they trigger cascading timeouts, and dynamically tune caching parameters to maximize hit ratios.
 
+For a deeper look at the architecture behind open-source video delivery, see our guide to [open-source video infrastructure](/blog/open-source-video-infrastructure-explained-control-plane-pipeline-cdn-storage/).
+
 ---
 
-## Anatomy of CDN Telemetry: Latency, Cache Efficiency, and Error Taxonomy
+## CDN Performance Monitoring Metrics: Latency, Cache Efficiency, and Errors
 
 Building a robust CDN observability platform requires establishing rigorous mathematical and technical definitions for every metric captured. In high-throughput edge environments, telemetry is divided into three functional pillars: Latency, Cache Efficiency, and Error Signatures.
 
@@ -192,7 +194,7 @@ In the Ollanode delivery architecture:
 - **Origin Shielding:** An intermediate caching tier that sits between edge POPs and the raw storage layer. When an uncached 4K video segment is requested across 40 worldwide edge nodes simultaneously, the edge nodes pull from the Origin Shield. The Shield executes request collapsing (`proxy_cache_use_stale updating`), issuing exactly one request to the underlying storage bucket, eliminating the thundering herd problem.
 - **Telemetry Pipeline:** Every request emits a structured, high-precision JSON event containing upstream connection timings, cache flags, byte sizes, and W3C trace IDs. A local Vector agent aggregates these logs, updates real-time Prometheus gauges, and streams structured logs to long-term storage.
 
-Refer to the [Ollanode Edge Docs](https://ollanode.com/docs) for full pull-zone clustering blueprints.
+If you are building the complete delivery stack, see our [step-by-step guide to setting up an open-source video pipeline](/blog/step-by-step-setting-up-your-first-open-source-video-pipeline-with-ollanode/), including adaptive HLS delivery and CDN configuration.
 
 ---
 
@@ -526,6 +528,8 @@ In a Multi-CDN topology, a client-side routing broker or DNS steering service (s
 ## Conclusion and Actionable Takeaways
 
 Modern web and video architectures cannot operate reliably with black-box delivery networks. Treating the edge as an unmonitored utility invites undetected latency degradation, silent cache invalidation failures, and unbudgeted origin bandwidth expenses.
+
+For the API side of the video lifecycle, see our guide to the [self-hosted video API](/blog/self-hosted-video-api-upload-processing-playback-webhooks-asset-lifecycle/) covering upload, processing, playback, webhooks, and asset lifecycle management.
 
 By instrumenting high-precision JSON access logging, computing real-time metrics via native in-memory Lua exporters, enforcing thundering-herd protections, and correlating edge latency percentiles with client-side player QoE telemetry, you transform edge delivery into an observable, predictable system.
 
